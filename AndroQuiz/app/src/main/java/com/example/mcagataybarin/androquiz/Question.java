@@ -7,8 +7,8 @@ package com.example.mcagataybarin.androquiz;
 public class Question {
     String question;
     String[] choices = new String[4];
-    int answer, point, status;
-    // 0-> false, 1-> true, 2-> no time
+    int answer, point, status=3;
+    // 0-> false, 1-> true, 2-> no time, 3-> not opened
 
     public Question(String question, String[] choices, int answer, int point){
         this.question = question;
