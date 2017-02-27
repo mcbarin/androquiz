@@ -28,6 +28,17 @@ public class QuestionActivity extends AppCompatActivity {
         TextView question = (TextView) findViewById(R.id.question);
         question.setText(q.question);
 
+
+        Button buttonA = (Button) findViewById(R.id.buttonA);
+        Button buttonB = (Button) findViewById(R.id.buttonB);
+        Button buttonC = (Button) findViewById(R.id.buttonC);
+        Button buttonD = (Button) findViewById(R.id.buttonD);
+
+        buttonA.setText(q.choices[0]);
+        buttonB.setText(q.choices[1]);
+        buttonC.setText(q.choices[2]);
+        buttonD.setText(q.choices[3]);
+
         /*
         String category = array[0];
         Integer number = Integer.parseInt(array[1]);
@@ -51,7 +62,17 @@ public class QuestionActivity extends AppCompatActivity {
         intent.putExtra("result", 2);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public void onClickB(View view){
 
     }
 
+    public void onClickC(View view) {
+
+    }
+
+    public void onClickD(View view){
+
+    }
 }

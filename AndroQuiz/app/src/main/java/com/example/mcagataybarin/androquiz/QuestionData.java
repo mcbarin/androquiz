@@ -7,19 +7,51 @@ package com.example.mcagataybarin.androquiz;
 public class QuestionData {
     private Category[] categories = new Category[3];
     private User currentUser;
+    private int point = 0;
 
     public void initialize(){
-        String[] SportQuestions = {"Question1", "Question2", "Question3", "Question4", "Question5"};
-        String[] HistoryQuestions = {"Question1", "Question2", "Question3", "Question4", "Question5"};
-        String[] ArtQuestions = {"Question1", "Question2", "Question3", "Question4", "Question5"};
+        String[] SportQuestions = {
+                "Türkiye'nin 4 yıldızlı futbol takımı hangisidir?",
+                "Galatasaray'ın kalecisi kimdir?",
+                "Galatasaray ve Manchester United arasında 1993'te oynanan maçın sonucu hangisidir?",
+                "Wesley Sneijder hangi takımda oynamamıştır?",
+                "2000 UEFA Kupası finalinde hangi oyuncu Galatasaray'ın son penaltısını atmıştır?"};
+        String[] HistoryQuestions = {
+                "Napolyon'un son savaşı hangisidir?",
+                "Osmanlı Devleti'nde kaç adet Mehmet isimli padişah vardır?",
+                "Büyük Gerilim sırasında hangi üç diktatör iktidardadır?",
+                "Efsaneye göre Kral Midas'ın dokunduğu şeylere ne olur?",
+                "Yunan mitolojisine göre Athena Ares'in nesi olur?"};
+        String[] ArtQuestions = {
+                "Kim bir eliyle yazı yazarken aynı anda öteki eliyle resim çizebiliyordu?",
+                "Hangisi bir Jack London eseridir?",
+                "Hangi kitap serisi sinemaya uyarlanmamıştır?",
+                "Gumball çizgi filmindeki balık karakterinin adı nedir?",
+                "Hangisi Dostoyevski’nin bir kitabı değildir?"};
 
-        String[][] SportChoices = {{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"}};
-        String[][] HistoryChoices = {{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"}};
-        String[][] ArtChoices = {{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"},{"a", "b", "c", "d"}};
+        String[][] SportChoices = {
+                {"Beşiktaş", "Fenerbahahahah", "Galatasaray", "FethiyeSpor"},
+                {"Igor Tudor", "Fernando Muslera", "Cladio Taffarel", "Ayı Volkan"},
+                {"0-0", "1-1", "2-2", "3-3"},
+                {"Galatasaray", "Inter", "Real Madrid", "Fenerbahahahah"},
+                {"Ergün Penbe", "George Hagi", "Popescu", "Mario Jardel"}};
 
-        int[] SportAnswers = {0,2,2,1,3};
-        int[] HistoryAnswers = {0,1,2,1,3};
-        int[] ArtAnswers = {2,1,1,2,0};
+        String[][] HistoryChoices = {
+                {"2. Dünya Savaşı", "Paris Savaşı", "Mısır Savaşı", "Waterloo Savaşı"},
+                {"3", "4", "5", "6"},
+                {"Stalin, Hitler, Lenin", "Hitler, Lenin, Mussolini", "Stalin, Hitler, Mussolini","Recep, Tayyip, Erdoğan"},
+                {"Buharlaşır", "Altına Dönüşür", "Bozulur", "Şanslı Olur"},
+                {"Kız kardeşi", "Eşi", "Arkadaşı", "Annesi"}};
+        String[][] ArtChoices = {
+                {"Leonardo da Vinci", "Monet", "Picasso", "Paris Hilton"},
+                {"Gurur ve Önyargı", "Beyaz Diş", "Yabancı", "Suç ve Ceza"},
+                {"Hannibal Serisi", "Gece Evi Serisi", "Harry Poter Serisi", "Yüzüklerin Efendisi Serisi"},
+                {"Darwin", "Anais", "Richard", "Nicole"},
+                {"İnsancıklar", "Kumarbaz", "Karamavoz Kardeşler", "İki Şehrin Hikayesi"}};
+
+        int[] SportAnswers = {2,1,3,3,2};
+        int[] HistoryAnswers = {3,3,2,1,0};
+        int[] ArtAnswers = {0,1,1,0,3};
 
         Question[] Sport = new Question[5];
         Question[] History = new Question[5];
@@ -61,5 +93,13 @@ public class QuestionData {
 
     public User getUser(){
         return this.currentUser;
+    }
+
+    public int getPoint(){
+        return this.point;
+    }
+
+    public void incrementPoint(int point){
+        this.point += point;
     }
 }
