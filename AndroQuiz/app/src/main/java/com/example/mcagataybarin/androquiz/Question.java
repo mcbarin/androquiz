@@ -27,8 +27,9 @@ public class Question {
         return this.status;
     }
 
-    public void timeIsUp(){
+    public int timeIsUp(){
         this.status = 2;
+        return this.status;
     }
 
 }

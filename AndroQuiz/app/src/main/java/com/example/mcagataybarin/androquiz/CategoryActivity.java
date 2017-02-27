@@ -2,9 +2,9 @@ package com.example.mcagataybarin.androquiz;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +13,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     Button[] questionButtons = new Button[15];
     int[] statusColors = {Color.RED, Color.GREEN, Color.BLUE, Color.TRANSPARENT};
+    int lastCategory, lastQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,62 +67,92 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             case R.id.c1q1:
                 intent.putExtra("category", 0);
                 intent.putExtra("question", 0);
+                lastCategory = 0;
+                lastQuestion = 0;
                 break;
             case R.id.c1q2:
                 intent.putExtra("category", 0);
                 intent.putExtra("question", 1);
+                lastCategory = 0;
+                lastQuestion = 1;
                 break;
             case R.id.c1q3:
                 intent.putExtra("category", 0);
                 intent.putExtra("question", 2);
+                lastCategory = 0;
+                lastQuestion = 2;
                 break;
             case R.id.c1q4:
                 intent.putExtra("category", 0);
                 intent.putExtra("question", 3);
+                lastCategory = 0;
+                lastQuestion = 3;
                 break;
             case R.id.c1q5:
                 intent.putExtra("category", 0);
                 intent.putExtra("question", 4);
+                lastCategory = 0;
+                lastQuestion = 4;
                 break;
             case R.id.c2q1:
                 intent.putExtra("category", 1);
                 intent.putExtra("question", 0);
+                lastCategory = 1;
+                lastQuestion = 0;
                 break;
             case R.id.c2q2:
                 intent.putExtra("category", 1);
                 intent.putExtra("question", 1);
+                lastCategory = 1;
+                lastQuestion = 1;
                 break;
             case R.id.c2q3:
                 intent.putExtra("category", 1);
                 intent.putExtra("question", 2);
+                lastCategory = 1;
+                lastQuestion = 2;
                 break;
             case R.id.c2q4:
                 intent.putExtra("category", 1);
                 intent.putExtra("question", 3);
+                lastCategory = 1;
+                lastQuestion = 3;
                 break;
             case R.id.c2q5:
                 intent.putExtra("category", 1);
                 intent.putExtra("question", 4);
+                lastCategory = 1;
+                lastQuestion = 4;
                 break;
             case R.id.c3q1:
                 intent.putExtra("category", 2);
                 intent.putExtra("question", 0);
+                lastCategory = 2;
+                lastQuestion = 0;
                 break;
             case R.id.c3q2:
                 intent.putExtra("category", 2);
                 intent.putExtra("question", 1);
+                lastCategory = 2;
+                lastQuestion = 1;
                 break;
             case R.id.c3q3:
                 intent.putExtra("category", 2);
                 intent.putExtra("question", 2);
+                lastCategory = 2;
+                lastQuestion = 2;
                 break;
             case R.id.c3q4:
                 intent.putExtra("category", 2);
                 intent.putExtra("question", 3);
+                lastCategory = 2;
+                lastQuestion = 3;
                 break;
             case R.id.c3q5:
                 intent.putExtra("category", 2);
                 intent.putExtra("question", 4);
+                lastCategory = 2;
+                lastQuestion = 4;
                 break;
             default:
                 break;

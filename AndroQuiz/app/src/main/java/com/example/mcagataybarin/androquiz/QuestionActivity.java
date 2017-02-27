@@ -44,6 +44,17 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent();
+        int status = q.timeIsUp();
+        setResult(RESULT_OK, intent);
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
+        finish();
+    }
+
     public void onClickA (View view){
         Intent intent = new Intent();
         int status = q.makeChoice(0);
@@ -52,7 +63,6 @@ public class QuestionActivity extends AppCompatActivity {
         intent.putExtra("category", categoryNumber);
         intent.putExtra("question", questionNumber);
         finish();
-
     }
 
     public void onClickB(View view){
