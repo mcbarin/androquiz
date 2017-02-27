@@ -17,12 +17,18 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         Intent intent = getIntent();
-        String messageText = intent.getStringExtra("qu");
+
+        // Here, we get category and question number from intent extra context.
+        // Do what you want to do with Question object.
+        int categoryNumber = intent.getIntExtra("category", 0);
+        int questionNumber = intent.getIntExtra("question", 0);
+        Category c = QuestionData.getInstance().getCategories()[categoryNumber];
+        Question q = c.questions[questionNumber];
+
         TextView question = (TextView) findViewById(R.id.question);
-        question.setText(messageText);
+        question.setText(q.question);
 
-        String [] array = messageText.split(",");
-
+        /*
         String category = array[0];
         Integer number = Integer.parseInt(array[1]);
 
@@ -36,6 +42,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         for(int z = 0; z < array.length; z++)
             Log.d("myTag", array[z]);
+        */
 
     }
 
