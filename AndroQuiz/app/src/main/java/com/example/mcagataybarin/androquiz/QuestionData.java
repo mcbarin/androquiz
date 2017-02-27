@@ -74,6 +74,8 @@ public class QuestionData {
         categories[1] = history;
         categories[2] = art;
 
+        this.point = 0;
+
     }
 
 

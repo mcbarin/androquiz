@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class QuestionActivity extends AppCompatActivity {
 
     Question q;
+    int categoryNumber, questionNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +23,8 @@ public class QuestionActivity extends AppCompatActivity {
 
         // Here, we get category and question number from intent extra context.
         // Do what you want to do with Question object.
-        int categoryNumber = intent.getIntExtra("category", 0);
-        int questionNumber = intent.getIntExtra("question", 0);
+        categoryNumber = intent.getIntExtra("category", 0);
+        questionNumber = intent.getIntExtra("question", 0);
         Category c = QuestionData.getInstance().getCategories()[categoryNumber];
         q = c.questions[questionNumber];
 
@@ -41,46 +42,46 @@ public class QuestionActivity extends AppCompatActivity {
         buttonC.setText(q.choices[2]);
         buttonD.setText(q.choices[3]);
 
-        /*
-        String category = array[0];
-        Integer number = Integer.parseInt(array[1]);
-
-        if(number == 5){
-            Log.d("r", "YEPP IT IS 5 number");
-        }
-
-        if(category.equalsIgnoreCase("s")){
-            Log.d("r", "YEPP IT IS S category");
-        }
-
-        for(int z = 0; z < array.length; z++)
-            Log.d("myTag", array[z]);
-        */
-
     }
 
     public void onClickA (View view){
         Intent intent = new Intent();
-        intent.putExtra("result", 2);
+        int status = q.makeChoice(0);
         setResult(RESULT_OK, intent);
-        boolean result = q.isCorrect(0);
-
-
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
         finish();
-
-
 
     }
 
     public void onClickB(View view){
-
+        Intent intent = new Intent();
+        int status = q.makeChoice(1);
+        setResult(RESULT_OK, intent);
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
+        finish();
     }
 
     public void onClickC(View view) {
-
+        Intent intent = new Intent();
+        int status = q.makeChoice(2);
+        setResult(RESULT_OK, intent);
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
+        finish();
     }
 
     public void onClickD(View view){
-
+        Intent intent = new Intent();
+        int status = q.makeChoice(3);
+        setResult(RESULT_OK, intent);
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
+        finish();
     }
 }

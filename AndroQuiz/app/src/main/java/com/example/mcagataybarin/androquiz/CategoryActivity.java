@@ -2,6 +2,7 @@ package com.example.mcagataybarin.androquiz;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Button[] questionButtons = new Button[15];
+    int[] statusColors = {Color.RED, Color.GREEN, Color.BLUE, Color.TRANSPARENT};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +50,13 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         Button c3q5 = (Button) findViewById(R.id.c3q5);
         c3q5.setOnClickListener(this);
 
-        TextView gameInfo = (TextView) findViewById(R.id.gameInfo);
-        String username = QuestionData.getInstance().getUser().username;
-        int point = QuestionData.getInstance().getPoint();
-        gameInfo.setText(String.format("User: %s  Point: %d", username, point));
+        questionButtons[0] = c1q1;questionButtons[1] = c1q2;questionButtons[2] = c1q3;
+        questionButtons[3] = c1q4;questionButtons[4] = c1q5;questionButtons[5] = c2q1;
+        questionButtons[6] = c2q2;questionButtons[7] = c2q3;questionButtons[8] = c2q4;
+        questionButtons[9] = c2q5;questionButtons[10] = c3q1;questionButtons[11] = c3q2;
+        questionButtons[12] = c3q3;questionButtons[13] = c3q4;questionButtons[14] = c3q5;
+
+        updateInfo();
     }
 
     @Override
@@ -130,14 +137,24 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    // questiondan gelicek şey
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                String result = data.getStringExtra("result");
+                int result = data.getIntExtra("result", 0);
+                int questionNumber = data.getIntExtra("question", 0);
+                int categoryNumber = data.getIntExtra("category", 0);
+                questionButtons[categoryNumber*5 + questionNumber].setBackgroundColor(statusColors[result]);
+                updateInfo();
             }
         }
+    }
+
+    public void updateInfo(){
+        TextView gameInfo = (TextView) findViewById(R.id.gameInfo);
+        String username = QuestionData.getInstance().getUser().username;
+        int point = QuestionData.getInstance().getPoint();
+        gameInfo.setText(String.format("User: %s  Point: %d", username, point));
     }
 
 }

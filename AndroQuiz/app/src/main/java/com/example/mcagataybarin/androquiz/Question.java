@@ -17,15 +17,14 @@ public class Question {
         this.point = point;
     }
 
-    public boolean isCorrect(int index){
-        boolean result = index == answer;
-        if (result) {
+    public int makeChoice(int index){
+        if (index == answer) {
             this.status = 1;
             QuestionData.getInstance().incrementPoint(this.point);
         }
         else
             this.status = 0;
-        return result;
+        return this.status;
     }
 
     public void timeIsUp(){
