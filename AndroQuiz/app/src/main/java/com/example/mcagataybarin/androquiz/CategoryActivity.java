@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,6 +45,11 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         c3q4.setOnClickListener(this);
         Button c3q5 = (Button) findViewById(R.id.c3q5);
         c3q5.setOnClickListener(this);
+
+        TextView gameInfo = (TextView) findViewById(R.id.gameInfo);
+        String username = QuestionData.getInstance().getUser().username;
+        int point = QuestionData.getInstance().getPoint();
+        gameInfo.setText(String.format("User: %s  Point: %d", username, point));
     }
 
     @Override
@@ -113,14 +119,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
-        startActivity(intent);
+        v.setEnabled(false); // Make the button unclickable
+        startActivityForResult(intent, 1);
     }
-
-    public void updateCategories(){
-        Category[] categories = QuestionData.getInstance().getCategories();
-
-    }
-
 
 
     // questiondan gelicek şey
@@ -133,12 +134,4 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void onClickc1q5(View view){
-        Intent intent = new Intent(this, QuestionActivity.class);
-        intent.putExtra("qu", "S,5");
-        Button but = (Button) view;
-        but.setBackgroundColor(Color.BLACK);
-        startActivityForResult(intent, 1);
-
-    }
 }

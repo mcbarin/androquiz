@@ -19,8 +19,10 @@ public class Question {
 
     public boolean isCorrect(int index){
         boolean result = index == answer;
-        if (result)
+        if (result) {
             this.status = 1;
+            QuestionData.getInstance().incrementPoint(this.point);
+        }
         else
             this.status = 0;
         return result;

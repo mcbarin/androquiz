@@ -169,4 +169,12 @@
         android:layout_alignBottom="@+id/category2"
         android:layout_alignStart="@+id/c3q5"
         android:layout_marginStart="33dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/c1q5"
+        android:id="@+id/gameInfo"
+        android:layout_alignEnd="@+id/c2q5" />
 </RelativeLayout>

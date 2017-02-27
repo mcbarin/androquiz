@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class QuestionActivity extends AppCompatActivity {
 
+    Question q;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,7 @@ public class QuestionActivity extends AppCompatActivity {
         int categoryNumber = intent.getIntExtra("category", 0);
         int questionNumber = intent.getIntExtra("question", 0);
         Category c = QuestionData.getInstance().getCategories()[categoryNumber];
-        Question q = c.questions[questionNumber];
+        q = c.questions[questionNumber];
 
         TextView question = (TextView) findViewById(R.id.question);
         question.setText(q.question);
@@ -62,6 +64,9 @@ public class QuestionActivity extends AppCompatActivity {
         intent.putExtra("result", 2);
         setResult(RESULT_OK, intent);
         finish();
+
+        boolean result = q.isCorrect(0);
+
     }
 
     public void onClickB(View view){
