@@ -177,4 +177,13 @@
         android:layout_alignStart="@+id/c1q5"
         android:id="@+id/gameInfo"
         android:layout_alignEnd="@+id/c2q5" />
+
+    <Button
+        android:text="RESTART"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/c2q1"
+        android:id="@+id/restartButton"
+        android:onClick="restartGame" />
 </RelativeLayout>

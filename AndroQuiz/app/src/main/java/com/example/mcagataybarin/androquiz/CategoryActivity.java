@@ -124,6 +124,12 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    public void restartGame(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+
     // questiondan gelicek şey
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
