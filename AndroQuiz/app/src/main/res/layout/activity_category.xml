@@ -37,6 +37,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="22dp"
         android:layout_marginTop="45dp"
+        android:onClick="onClickc1q5"
         android:id="@+id/c1q5" />
 
     <Button
