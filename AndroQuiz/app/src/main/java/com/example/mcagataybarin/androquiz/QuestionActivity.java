@@ -59,13 +59,16 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
-    public void onClickA(View view){
+    public void onClickA (View view){
         Intent intent = new Intent();
         intent.putExtra("result", 2);
         setResult(RESULT_OK, intent);
+        boolean result = q.isCorrect(0);
+
+
         finish();
 
-        boolean result = q.isCorrect(0);
+
 
     }
 
