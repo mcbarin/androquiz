@@ -70,9 +70,8 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="73sp"
-        android:layout_centerHorizontal="false"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="false"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="35dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp" />
 </RelativeLayout>

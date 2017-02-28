@@ -68,6 +68,9 @@ public class QuestionActivity extends AppCompatActivity {
                 int secs = seconds%60;
                 String time = String.format("%02d", secs);
                 timeView.setText(time);
+                if(secs < 4){
+                    timeView.setTextColor(Color.RED);
+                }
                 if (running) {
                     seconds--;
                 }
