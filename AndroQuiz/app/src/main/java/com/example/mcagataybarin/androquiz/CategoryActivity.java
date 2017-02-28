@@ -158,6 +158,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
         v.setEnabled(false); // Make the button unclickable
+        QuestionData.getInstance().incrementNumAnsweredQuestions();
         startActivityForResult(intent, 1);
     }
 
@@ -177,6 +178,10 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 int categoryNumber = data.getIntExtra("category", 0);
                 questionButtons[categoryNumber*5 + questionNumber].setBackgroundColor(statusColors[result]);
                 updateInfo();
+                if(QuestionData.getInstance().getNumAnsweredQuestions() == 15){
+                    TextView finishText = (TextView) findViewById(R.id.finishText);
+                    finishText.setText("Game finished. Your Point: " + ""+QuestionData.getInstance().getPoint());
+                }
             }
         }
     }

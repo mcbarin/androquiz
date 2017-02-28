@@ -30,17 +30,6 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="500"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/category1"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="45dp"
-        android:onClick="onClickc1q5"
-        android:id="@+id/c1q5" />
-
-    <Button
         android:text="400"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,15 +46,6 @@
         android:layout_alignEnd="@+id/c1q4"
         android:layout_marginTop="12dp"
         android:id="@+id/c1q3" />
-
-    <Button
-        android:text="200"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/c1q3"
-        android:layout_alignStart="@+id/c1q3"
-        android:layout_marginTop="18dp"
-        android:id="@+id/c1q2" />
 
     <Button
         android:text="500"
@@ -179,11 +159,44 @@
         android:layout_alignEnd="@+id/c2q5" />
 
     <Button
+        android:text="200"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/c1q2"
+        android:layout_below="@+id/c1q3"
+        android:layout_alignStart="@+id/c1q3" />
+
+    <Button
+        android:text="500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="27dp"
+        android:onClick="onClickc1q5"
+        android:id="@+id/c1q5"
+        android:layout_below="@+id/category1"
+        android:layout_alignParentStart="true" />
+
+    <Button
         android:text="RESTART"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/c2q1"
         android:id="@+id/restartButton"
-        android:onClick="restartGame" />
+        android:onClick="restartGame"
+        android:layout_below="@+id/c2q1"
+        android:layout_alignStart="@+id/c2q1"
+        android:layout_marginTop="14dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/finishText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/c3q1"
+        android:textColor="@android:color/holo_red_dark"
+        android:capitalize="words"
+        android:gravity="center"
+        android:textStyle="normal|bold" />
 </RelativeLayout>

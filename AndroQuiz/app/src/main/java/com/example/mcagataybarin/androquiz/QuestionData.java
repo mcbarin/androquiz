@@ -8,6 +8,7 @@ public class QuestionData {
     private Category[] categories = new Category[3];
     private User currentUser;
     private int point = 0;
+    private int numAnsweredQuestions = 0;
 
     public void initialize(){
         String[] SportQuestions = {
@@ -75,6 +76,7 @@ public class QuestionData {
         categories[2] = art;
 
         this.point = 0;
+        this.numAnsweredQuestions = 0;
 
     }
 
@@ -103,5 +105,13 @@ public class QuestionData {
 
     public void incrementPoint(int point){
         this.point += point;
+    }
+
+    public void incrementNumAnsweredQuestions(){
+        this.numAnsweredQuestions += 1;
+    }
+
+    public int getNumAnsweredQuestions(){
+        return this.numAnsweredQuestions;
     }
 }
