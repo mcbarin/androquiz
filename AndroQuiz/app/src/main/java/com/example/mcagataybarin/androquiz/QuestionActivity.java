@@ -54,9 +54,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
         running = true;
         runTimer();
-
-
-
+        
     }
 
     private void runTimer() {
