@@ -2,6 +2,7 @@ package com.example.mcagataybarin.androquiz;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,10 @@ public class QuestionActivity extends AppCompatActivity {
 
     Question q;
     int categoryNumber, questionNumber;
+
+    private int seconds = 10;
+    private boolean running, wasRunning;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,62 @@ public class QuestionActivity extends AppCompatActivity {
         buttonC.setText(q.choices[2]);
         buttonD.setText(q.choices[3]);
 
+        if (savedInstanceState != null) {
+            seconds = savedInstanceState.getInt("seconds");
+            running = savedInstanceState.getBoolean("running");
+            wasRunning = savedInstanceState.getBoolean("wasRunning");
+        }
+        running = true;
+        runTimer();
+
+
+
+    }
+
+    private void runTimer() {
+        final TextView timeView = (TextView)findViewById(R.id.time_view);
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int hours = seconds/3600;
+                int minutes = (seconds%3600)/60;
+                int secs = seconds%60;
+                String time = String.format("%02d", secs);
+                timeView.setText(time);
+                if (running) {
+                    seconds--;
+                }
+
+                if(seconds == -1){
+                    Intent intent = new Intent();
+                    int status = q.timeIsUp();
+                    setResult(RESULT_OK, intent);
+                    intent.putExtra("result", status);
+                    intent.putExtra("category", categoryNumber);
+                    intent.putExtra("question", questionNumber);
+                    finish();
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        wasRunning = running;
+        running = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasRunning) {
+            running = true;
+        }
     }
 
     @Override
