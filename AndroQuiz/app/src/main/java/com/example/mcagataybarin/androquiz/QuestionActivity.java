@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
 
     Question q;
     int categoryNumber, questionNumber;
@@ -50,6 +50,11 @@ public class QuestionActivity extends AppCompatActivity {
         buttonC.setText(q.choices[2]);
         buttonD.setText(q.choices[3]);
 
+        buttonA.setOnClickListener(this);
+        buttonB.setOnClickListener(this);
+        buttonC.setOnClickListener(this);
+        buttonD.setOnClickListener(this);
+
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             running = savedInstanceState.getBoolean("running");
@@ -58,6 +63,40 @@ public class QuestionActivity extends AppCompatActivity {
         running = true;
         runTimer();
         
+    }
+
+    /*
+    * This is an override onclick function for question choices.
+    * Since similar actions will happen after each click, having one click listener for each
+    * button is better for readability and performance.
+    * This method will make choice on question object and return result of the question to the
+    * CategoryActivity so that CategoryActivity can update necessary parts in its layout.
+    * */
+    @Override
+    public void onClick(View v){
+        Intent intent = new Intent();
+        int status=3;
+        switch (v.getId()){
+            case R.id.buttonA:
+                status = q.makeChoice(0);
+                break;
+            case R.id.buttonB:
+                status = q.makeChoice(1);
+                break;
+            case R.id.buttonC:
+                status = q.makeChoice(2);
+                break;
+            case R.id.buttonD:
+                status = q.makeChoice(3);
+                break;
+            default:
+                break;
+        }
+        setResult(RESULT_OK, intent);
+        intent.putExtra("result", status);
+        intent.putExtra("category", categoryNumber);
+        intent.putExtra("question", questionNumber);
+        finish();
     }
 
     private void runTimer() {
@@ -117,46 +156,6 @@ public class QuestionActivity extends AppCompatActivity {
     public void onBackPressed(){
         Intent intent = new Intent();
         int status = q.timeIsUp();
-        setResult(RESULT_OK, intent);
-        intent.putExtra("result", status);
-        intent.putExtra("category", categoryNumber);
-        intent.putExtra("question", questionNumber);
-        finish();
-    }
-
-    public void onClickA (View view){
-        Intent intent = new Intent();
-        int status = q.makeChoice(0);
-        setResult(RESULT_OK, intent);
-        intent.putExtra("result", status);
-        intent.putExtra("category", categoryNumber);
-        intent.putExtra("question", questionNumber);
-        finish();
-    }
-
-    public void onClickB(View view){
-        Intent intent = new Intent();
-        int status = q.makeChoice(1);
-        setResult(RESULT_OK, intent);
-        intent.putExtra("result", status);
-        intent.putExtra("category", categoryNumber);
-        intent.putExtra("question", questionNumber);
-        finish();
-    }
-
-    public void onClickC(View view) {
-        Intent intent = new Intent();
-        int status = q.makeChoice(2);
-        setResult(RESULT_OK, intent);
-        intent.putExtra("result", status);
-        intent.putExtra("category", categoryNumber);
-        intent.putExtra("question", questionNumber);
-        finish();
-    }
-
-    public void onClickD(View view){
-        Intent intent = new Intent();
-        int status = q.makeChoice(3);
         setResult(RESULT_OK, intent);
         intent.putExtra("result", status);
         intent.putExtra("category", categoryNumber);
