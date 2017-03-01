@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ public class QuestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); // For fullscreen activity.
         Intent intent = getIntent();
 
         // Here, we get category and question number from intent extra context.
@@ -31,7 +34,7 @@ public class QuestionActivity extends AppCompatActivity {
         categoryNumber = intent.getIntExtra("category", 0);
         questionNumber = intent.getIntExtra("question", 0);
         Category c = QuestionData.getInstance().getCategories()[categoryNumber];
-        q = c.questions[questionNumber];
+        q = c.questions[questionNumber]; // Question object is retrieved from QuestionData class.
 
         TextView question = (TextView) findViewById(R.id.question);
         question.setText(q.question);
@@ -106,6 +109,10 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    * When back button is pressed, this method will set the question as unanswered and it will start
+    * the CategoryActivity again. CategoryActivity itself will set the background of the question
+    * by using intent's extra context.*/
     @Override
     public void onBackPressed(){
         Intent intent = new Intent();

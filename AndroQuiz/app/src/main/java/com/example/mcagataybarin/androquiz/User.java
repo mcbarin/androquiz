@@ -6,8 +6,6 @@ package com.example.mcagataybarin.androquiz;
 
 public class User {
     String username;
-    int highscore = 0;
-
     User(String username){
         this.username = username;
     }

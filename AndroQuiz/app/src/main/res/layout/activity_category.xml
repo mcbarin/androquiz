@@ -18,7 +18,6 @@
         android:layout_marginTop="55dp"
         android:id="@+id/category1"
         android:layout_alignParentTop="true"
-        android:background="@android:color/black"
         android:gravity="center"
         android:paddingBottom="5sp"
         android:paddingTop="5sp"
@@ -28,131 +27,31 @@
         android:fontFamily="sans-serif-smallcaps"
         android:textSize="16sp"
         android:textStyle="normal|bold"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/black" />
 
-    <Button
-        android:text="400"
+
+    <TextView
+        android:text="HISTORY"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/c1q5"
-        android:layout_alignStart="@+id/c1q5"
-        android:layout_marginTop="10dp"
-        android:id="@+id/c1q4"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="300"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/c1q4"
-        android:layout_alignEnd="@+id/c1q4"
-        android:layout_marginTop="12dp"
-        android:id="@+id/c1q3"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="500"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/c1q5"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/c2q5"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/c1q4"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/c2q4"
-        android:text="400"
-        android:textColor="@android:color/white" />
-
-    <Button
-        android:text="100"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:id="@+id/c1q1"
-        android:layout_below="@+id/c1q2"
-        android:layout_alignStart="@+id/c1q2"
-        android:textColor="@android:color/background_light" />
-
-    <Button
-        android:text="300"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/c1q3"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/c2q3"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="100"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/c2q1"
-        android:layout_alignBaseline="@+id/c1q1"
-        android:layout_alignBottom="@+id/c1q1"
-        android:layout_alignStart="@+id/c2q3"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="100"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/c2q1"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="11dp"
-        android:id="@+id/c3q1"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="200"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/c2q2"
-        android:layout_alignEnd="@+id/c3q1"
-        android:id="@+id/c3q2"
-        android:layout_alignTop="@+id/c2q2"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="300"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/c2q3"
-        android:layout_alignEnd="@+id/c3q2"
-        android:id="@+id/c3q3"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="400"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/c2q4"
-        android:layout_alignEnd="@+id/c3q3"
-        android:id="@+id/c3q4"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="500"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/c2q5"
-        android:layout_alignEnd="@+id/c3q4"
-        android:id="@+id/c3q5"
-        android:textColor="@android:color/background_light"/>
-
-    <Button
-        android:text="200"
-        android:layout_height="wrap_content"
-        android:id="@+id/c2q2"
-        android:layout_alignStart="@+id/c2q1"
-        android:layout_alignTop="@+id/c1q2"
-        android:layout_width="wrap_content"
-        android:layout_above="@+id/c1q1"
-        android:textColor="@android:color/background_light"/>
+        android:id="@+id/category2"
+        android:gravity="center"
+        android:paddingBottom="5sp"
+        android:paddingTop="5sp"
+        android:capitalize="characters"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textSize="16sp"
+        android:textStyle="normal|bold"
+        android:layout_alignBaseline="@+id/category1"
+        android:layout_alignBottom="@+id/category1"
+        android:layout_alignStart="@+id/c2q5"
+        android:layout_alignEnd="@+id/c2q5"
+        android:textColor="@android:color/white"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/black"
+        />
 
     <TextView
         android:text="ART"
@@ -162,7 +61,6 @@
         android:layout_alignStart="@+id/c3q5"
         android:layout_alignEnd="@+id/c3q5"
         android:layout_alignBottom="@+id/category2"
-        android:background="@android:color/black"
         android:gravity="center"
         android:paddingBottom="5sp"
         android:paddingTop="5sp"
@@ -170,7 +68,160 @@
         android:fontFamily="sans-serif-smallcaps"
         android:textSize="16sp"
         android:textStyle="normal|bold"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/black"/>
+
+    <Button
+        android:text="400"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/c1q5"
+        android:layout_alignStart="@+id/c1q5"
+        android:layout_marginTop="10dp"
+        android:id="@+id/c1q4"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray" />
+
+    <Button
+        android:text="300"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/c1q4"
+        android:layout_alignEnd="@+id/c1q4"
+        android:layout_marginTop="12dp"
+        android:id="@+id/c1q3"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/c1q5"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/c2q5"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/c1q4"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/c2q4"
+        android:text="400"
+        android:textColor="@android:color/white"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:id="@+id/c1q1"
+        android:layout_below="@+id/c1q2"
+        android:layout_alignStart="@+id/c1q2"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="300"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/c1q3"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/c2q3"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c2q1"
+        android:layout_alignBaseline="@+id/c1q1"
+        android:layout_alignBottom="@+id/c1q1"
+        android:layout_alignStart="@+id/c2q3"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/c2q1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="11dp"
+        android:id="@+id/c3q1"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="200"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/c2q2"
+        android:layout_alignEnd="@+id/c3q1"
+        android:id="@+id/c3q2"
+        android:layout_alignTop="@+id/c2q2"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="300"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/c2q3"
+        android:layout_alignEnd="@+id/c3q2"
+        android:id="@+id/c3q3"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="400"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/c2q4"
+        android:layout_alignEnd="@+id/c3q3"
+        android:id="@+id/c3q4"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/c2q5"
+        android:layout_alignEnd="@+id/c3q4"
+        android:id="@+id/c3q5"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
+    <Button
+        android:text="200"
+        android:layout_height="wrap_content"
+        android:id="@+id/c2q2"
+        android:layout_alignStart="@+id/c2q1"
+        android:layout_alignTop="@+id/c1q2"
+        android:layout_width="wrap_content"
+        android:layout_above="@+id/c1q1"
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
+
 
     <TextView
         android:text="TextView"
@@ -188,7 +239,9 @@
         android:id="@+id/c1q2"
         android:layout_below="@+id/c1q3"
         android:layout_alignStart="@+id/c1q3"
-        android:textColor="@android:color/background_light"/>
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
 
     <Button
         android:text="500"
@@ -200,7 +253,9 @@
         android:id="@+id/c1q5"
         android:layout_below="@+id/category1"
         android:layout_alignParentStart="true"
-        android:textColor="@android:color/background_light"/>
+        android:textColor="@android:color/background_light"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/darker_gray"/>
 
     <Button
         android:text="RESTART"
@@ -212,7 +267,8 @@
         android:layout_alignStart="@+id/c2q1"
         android:layout_marginTop="14dp"
         android:textColor="@android:color/white"
-        android:background="@android:color/holo_green_dark" />
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="@android:color/holo_green_dark"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -226,23 +282,5 @@
         android:gravity="center"
         android:textStyle="normal|bold" />
 
-    <TextView
-        android:text="HISTORY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/category2"
-        android:background="@android:color/black"
-        android:gravity="center"
-        android:paddingBottom="5sp"
-        android:paddingTop="5sp"
-        android:capitalize="characters"
-        android:fontFamily="sans-serif-smallcaps"
-        android:textSize="16sp"
-        android:textStyle="normal|bold"
-        android:layout_alignBaseline="@+id/category1"
-        android:layout_alignBottom="@+id/category1"
-        android:layout_alignStart="@+id/c2q5"
-        android:layout_alignEnd="@+id/c2q5"
-        android:textColor="@android:color/white"
-        />
+
 </RelativeLayout>

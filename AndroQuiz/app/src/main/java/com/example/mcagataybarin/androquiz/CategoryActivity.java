@@ -1,11 +1,13 @@
 package com.example.mcagataybarin.androquiz;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,6 +20,8 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); // For fullscreen activity.
         setContentView(R.layout.activity_category);
 
         Button c1q1 = (Button) findViewById(R.id.c1q1);
@@ -60,6 +64,11 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         updateInfo();
     }
 
+
+    /*
+    * This method is an Override onClick function for question buttons. Whenever a question is clicked,
+    * this method will call an it will create an intent to the QuestionActivity.
+    */
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, QuestionActivity.class);
@@ -158,17 +167,23 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
         v.setEnabled(false); // Make the button unclickable
-        QuestionData.getInstance().incrementNumAnsweredQuestions();
+        QuestionData.getInstance().incrementNumAnsweredQuestions(); // increment the number if questions.
         startActivityForResult(intent, 1);
     }
 
-
+    /*
+    * This method is initiated when restart button is clicked.
+    * So, it will start an activity using intent to the MainActivity.
+    */
     public void restartGame(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-
+    /*
+    * This method is called when there is an intent coming from QuestionActivity.
+    * It will take the result of the question, and update the necessary parts of the CategoryActivity.
+    */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
@@ -176,8 +191,14 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 int result = data.getIntExtra("result", 0);
                 int questionNumber = data.getIntExtra("question", 0);
                 int categoryNumber = data.getIntExtra("category", 0);
-                questionButtons[categoryNumber*5 + questionNumber].setBackgroundColor(statusColors[result]);
+
+                // These 2 lines is for setting the background color of button's background drawable object.
+                ColorStateList csl = new ColorStateList(new int[][]{{}}, new int[]{statusColors[result]});
+                questionButtons[categoryNumber*5 + questionNumber].setBackgroundTintList(csl);
+
                 updateInfo();
+
+                // if all questions are answered, show the end game message.
                 if(QuestionData.getInstance().getNumAnsweredQuestions() == 15){
                     TextView finishText = (TextView) findViewById(R.id.finishText);
                     finishText.setText("Game finished. Your Point: " + ""+QuestionData.getInstance().getPoint());
@@ -186,6 +207,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /*
+    * This method updates the current user info and point of the user on Category Activity.
+    */
     public void updateInfo(){
         TextView gameInfo = (TextView) findViewById(R.id.gameInfo);
         String username = QuestionData.getInstance().getUser().username;

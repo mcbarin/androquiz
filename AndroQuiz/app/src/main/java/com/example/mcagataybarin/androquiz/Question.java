@@ -4,6 +4,10 @@ package com.example.mcagataybarin.androquiz;
  * Created by mcagataybarin on 2/26/17.
  */
 
+
+/*
+* This class is created for Question object and holds the necessary informations for each question object.
+* */
 public class Question {
     String question;
     String[] choices = new String[4];

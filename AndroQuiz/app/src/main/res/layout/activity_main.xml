@@ -21,7 +21,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:hint="Username"
-        android:textColorLink="@android:color/black" />
+        android:textColorLink="@android:color/black"
+        android:background="@drawable/roundbutton"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
     <TextView
         android:text="Enter your username"
@@ -42,18 +46,19 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="76dp"
         android:id="@+id/button"
-        android:onClick="usernameEntered" />
+        android:onClick="usernameEntered"
+        android:background="@drawable/roundbutton"/>
 
     <TextView
         android:text="AndroQuiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="79dp"
-        android:layout_alignStart="@+id/editText"
         android:textColor="@android:color/black"
         android:textStyle="normal|bold"
-        android:textSize="48sp"
-        android:gravity="center" />
+        android:textSize="56sp"
+        android:gravity="center"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="57dp" />
 </RelativeLayout>

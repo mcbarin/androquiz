@@ -4,6 +4,12 @@ package com.example.mcagataybarin.androquiz;
  * Created by mcagataybarin on 2/26/17.
  */
 
+
+/*
+* This class holds the question data and also the state of the game. Whenever new game is started,
+* initialize method will be called so that it will start from initial point.
+* This class makes use of Category, Question and User classes.
+* */
 public class QuestionData {
     private Category[] categories = new Category[3];
     private User currentUser;
@@ -31,10 +37,10 @@ public class QuestionData {
                 "Hangisi Dostoyevski’nin bir kitabı değildir?"};
 
         String[][] SportChoices = {
-                {"Beşiktaş", "Fenerbahahahah", "Galatasaray", "FethiyeSpor"},
+                {"Beşiktaş", "Fenerbahce", "Galatasaray", "FethiyeSpor"},
                 {"Igor Tudor", "Fernando Muslera", "Cladio Taffarel", "Ayı Volkan"},
                 {"0-0", "1-1", "2-2", "3-3"},
-                {"Galatasaray", "Inter", "Real Madrid", "Fenerbahahahah"},
+                {"Galatasaray", "Inter", "Real Madrid", "Fenerbahce"},
                 {"Ergün Penbe", "George Hagi", "Popescu", "Mario Jardel"}};
 
         String[][] HistoryChoices = {
