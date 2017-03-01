@@ -12,6 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+    /*
+    * This class is the main java class of the question activity where the user is prompted with a question
+    * and there are 4 choices as described in the PDF.
+    */
+
+
 public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
 
     Question q;
@@ -36,9 +42,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         Category c = QuestionData.getInstance().getCategories()[categoryNumber];
         q = c.questions[questionNumber]; // Question object is retrieved from QuestionData class.
 
+        // Question is displayed with a TextView
         TextView question = (TextView) findViewById(R.id.question);
         question.setText(q.question);
-
 
         Button buttonA = (Button) findViewById(R.id.buttonA);
         Button buttonB = (Button) findViewById(R.id.buttonB);
@@ -55,6 +61,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         buttonC.setOnClickListener(this);
         buttonD.setOnClickListener(this);
 
+        // These lines ensure that timer works properly when user presses a home button or rotates the screen.
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             running = savedInstanceState.getBoolean("running");
@@ -92,12 +99,21 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
+
+        // we are giving the result back to the CategoryActivity with the user's selected answer.
         setResult(RESULT_OK, intent);
         intent.putExtra("result", status);
         intent.putExtra("category", categoryNumber);
         intent.putExtra("question", questionNumber);
         finish();
     }
+
+
+        /*
+    * Timer function makes use of Handler class. Each Handler object is associated with a thread
+    * and its message queue, it allows us to run the code with a delay of a second so that we can
+    * have the countdown from 10 to 0 in the application with no problems.
+    */
 
     private void runTimer() {
         final TextView timeView = (TextView)findViewById(R.id.time_view);
@@ -132,6 +148,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+
+        /*
+    * When application gets suspended we store wasRunning variable so that when the user comes back
+    * we can pass it to onResume and check if timer was running.
+    */
+
+
     @Override
     protected void onPause()
     {
@@ -139,6 +162,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         wasRunning = running;
         running = false;
     }
+
+        /*
+    * Depending on whether timer was running, this function will resume the countdown so if we left the application
+    * with 5 seconds on the timer, it will continue to count from 5 down to 0.
+    */
+
 
     @Override
     protected void onResume() {

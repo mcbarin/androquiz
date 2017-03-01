@@ -6,7 +6,7 @@ package com.example.mcagataybarin.androquiz;
 
 
 /*
-* This class is created for Question object and holds the necessary informations for each question object.
+* This class is created for Question object and holds the necessary information for each question object.
 * */
 public class Question {
     String question;
@@ -21,6 +21,11 @@ public class Question {
         this.point = point;
     }
 
+        /*
+     * When user answers a question we make a call to this function which updates the status of the question
+     * and returns the updated status value.
+    */
+
     public int makeChoice(int index){
         if (index == answer) {
             this.status = 1;
@@ -30,6 +35,10 @@ public class Question {
             this.status = 0;
         return this.status;
     }
+
+        /*
+    *  This method is called when user does not give an answer to the question during the countdown.
+    */
 
     public int timeIsUp(){
         this.status = 2;
