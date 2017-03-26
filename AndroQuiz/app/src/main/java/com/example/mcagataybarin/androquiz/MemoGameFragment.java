@@ -68,13 +68,20 @@ public class MemoGameFragment extends Fragment {
 
         LinearLayout target_flags = (LinearLayout) view.findViewById(R.id.target_flags_images);
 
-
         for(int i=0;i<5;i++){
             ImageView image = new ImageView(view.getContext());
             image.setImageBitmap(ImageViaAssets("img0.png"));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
             layoutParams.setMargins(10,0,10,0);
             target_flags.addView(image, layoutParams);
+        }
+
+        LinearLayout heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
+        int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
+        for(int i=0;i<remaining_lives;i++){
+            ImageView heart = new ImageView(view.getContext());
+            heart.setBackground(getResources().getDrawable(R.drawable.heart));
+            heart_images.addView(heart);
         }
 
         gridView = (GridView) view.findViewById(R.id.gridView);

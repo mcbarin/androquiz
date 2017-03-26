@@ -9,8 +9,8 @@ import java.util.Random;
 
 class MemoData {
     private User currentUser;
-    private Score score;
-    private LifePoint lifePoint;
+    public Score score;
+    public LifePoint lifePoint;
 
     private static final MemoData ourInstance = new MemoData();
 
