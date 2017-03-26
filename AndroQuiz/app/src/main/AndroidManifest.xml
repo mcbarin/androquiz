@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity" />
-        <activity android:name=".QuestionActivity"></activity>
+        <activity android:name=".QuestionActivity" />
+        <activity android:name=".TempActivity"></activity>
     </application>
 
 </manifest>

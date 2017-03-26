@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         User usr = new User(username.getText().toString());
         QuestionData.getInstance().initialize();
         QuestionData.getInstance().setUser(usr);
-        Intent intent = new Intent(this, CategoryActivity.class);
+        MemoData.getInstance().initialize(usr);
+        Intent intent = new Intent(this, TempActivity.class);
         MainActivity.this.startActivity(intent);
 
     }
