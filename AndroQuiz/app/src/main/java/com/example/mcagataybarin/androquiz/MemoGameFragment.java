@@ -2,11 +2,14 @@ package com.example.mcagataybarin.androquiz;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +43,13 @@ public class MemoGameFragment extends Fragment {
     private int mLevel; // 1,2 or 3
     private GridView gridView;
     private GridViewAdapter gridAdapter;
+    private View view;
+
+    // For handling the choosing flags.
+    int lastOpenedFlagPosition;
+    String lastOpenedFlagName;
+    boolean isAnyFlagOpen = false;
+    boolean isSuccessfull = false;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +77,7 @@ public class MemoGameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_memo_game, container, false);
+        view = inflater.inflate(R.layout.fragment_memo_game, container, false);
 
         // First get the flag data from MemoData class.
         ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
@@ -82,7 +94,7 @@ public class MemoGameFragment extends Fragment {
         }
 
         // For setting up the life images programmatically <3 <3 <3
-        LinearLayout heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
+        final LinearLayout heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
         int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
         for(int i=0;i<remaining_lives;i++){
             ImageView heart = new ImageView(view.getContext());
@@ -92,19 +104,81 @@ public class MemoGameFragment extends Fragment {
 
         gridView = (GridView) view.findViewById(R.id.gridView);
         gridView.setNumColumns(target_flagnames.size());
-
+        gridView.setEnabled(false);
         gridAdapter = new GridViewAdapter(view.getContext(), R.layout.grid_item_layout, flag_list);
         gridView.setAdapter(gridAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View local_view, int position, long id) {
                 String item = (String) parent.getItemAtPosition(position);
                 Log.i("ITEM", item);
-                Log.i("ID", ""+id);
-                Log.i("POSITION", ""+position);
+
+                final ImageView image = getImageViewAtIndex(position);
+                showFlag(image);
+
+                if(isAnyFlagOpen){
+                    // Then check if it's same or not.
+                    boolean isSame = lastOpenedFlagName.equals(item);
+                    if (isSame){
+                        // Increment Point.
+                        Log.i("STATUS", "RIGHT");
+                        MemoData.getInstance().score.incrementScore();
+                        updateScore(view);
+
+                        isAnyFlagOpen = false;
+                        isSuccessfull = true;
+                        showFlag(image);
+                    }else {
+                        // Then it failed.
+                        Log.i("STATUS", "WRONG");
+                        MemoData.getInstance().lifePoint.decrementRemainingLife();
+                        heart_images.removeViewAt(0);
+                        boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
+                        if (isFailed){
+                            // GAME OVER;
+                            Toast.makeText(getContext(), "Game Over", Toast.LENGTH_LONG).show();
+                            gridView.setEnabled(false); // Disable the gridView.
+                        }else{
+                            final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
+
+                            isSuccessfull = false;
+                            isAnyFlagOpen = false;
+
+                            // Hide the flag after one second.
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideFlag(image);
+                                    hideFlag(previousImage);
+                                }
+                            },1500);
+                        }
+                    }
+                }else {
+                    isSuccessfull = false; // Turn this to false again.
+                    lastOpenedFlagName = item;
+                    lastOpenedFlagPosition = position;
+                    isAnyFlagOpen = true;
+                    if (image != null) {
+                        showFlag(image);
+                        // Show flag for 5 seconds.
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!isSuccessfull)
+                                    hideFlag(image);
+                            }
+                        }, 5000);
+
+                    }
+                }
+
             }
         });
+
+        showFlagsOnStart();
+
         return view;
     }
 
@@ -160,5 +234,47 @@ public class MemoGameFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideFlag(ImageView image){
+        Resources res = getContext().getResources();
+        final int newColor = res.getColor(R.color.flag_unvisible);
+        image.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+    }
+
+    public void showFlag(ImageView image){
+        image.setColorFilter(null);
+    }
+
+    private ImageView getImageViewAtIndex(int index){
+        View image_view = gridView.getChildAt(index);
+
+        if (image_view != null)
+            return (ImageView) image_view.findViewById(R.id.grid_image);
+        return null;
+    }
+
+    public void showFlagsOnStart(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // First show all images.
+                for (int i=0; i< gridView.getChildCount(); i++){
+                    View imageView = gridView.getChildAt(i);
+                    if (imageView != null){
+                        ImageView image = (ImageView) imageView.findViewById(R.id.grid_image);
+                        hideFlag(image);
+                    }
+                }
+                gridView.setEnabled(true);
+            }
+        }, 5000);
+
+    }
+
+    public void updateScore(View view){
+        int current_score = MemoData.getInstance().score.getScore();
+        TextView score = (TextView) view.findViewById(R.id.memo_score);
+        score.setText("Score: " + ""+ current_score);
     }
 }
