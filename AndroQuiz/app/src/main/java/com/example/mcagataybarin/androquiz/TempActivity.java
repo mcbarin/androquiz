@@ -12,9 +12,7 @@ public class TempActivity extends AppCompatActivity implements MemoGameFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
 
-
-
-        MemoGameFragment fragment = MemoGameFragment.newInstance(4);
+        MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.memo_fragment, fragment).commit();
 

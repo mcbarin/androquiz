@@ -23,13 +23,13 @@ import java.util.ArrayList;
 public class GridViewAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResourceId;
-    private String[] data;
+    private ArrayList<String> flags;
 
-    public GridViewAdapter(Context context, int layoutResourceId, String[] data) {
-        super(context, layoutResourceId, data);
+    public GridViewAdapter(Context context, int layoutResourceId, ArrayList<String> flags) {
+        super(context, layoutResourceId, flags);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
+        this.flags = flags;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class GridViewAdapter extends ArrayAdapter {
         } else {
             holder = (ViewHolder) row.getTag();
         }
-        holder.image.setImageBitmap(ImageViaAssets("img0.png"));
+        holder.image.setImageBitmap(ImageViaAssets(flags.get(position)));
         return row;
     }
 

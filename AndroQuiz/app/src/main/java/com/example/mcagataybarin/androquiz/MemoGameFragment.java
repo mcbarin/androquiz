@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
 /**
@@ -64,18 +67,21 @@ public class MemoGameFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_memo_game, container, false);
 
-        String[] flagNames = MemoData.getInstance().getFlagNames(25);
+        // First get the flag data from MemoData class.
+        ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
+        ArrayList<String> flag_list = MemoData.getInstance().getFlagList(mLevel);
 
         LinearLayout target_flags = (LinearLayout) view.findViewById(R.id.target_flags_images);
 
-        for(int i=0;i<5;i++){
+        for(int i=0; i<target_flagnames.size(); i++){
             ImageView image = new ImageView(view.getContext());
-            image.setImageBitmap(ImageViaAssets("img0.png"));
+            image.setImageBitmap(ImageViaAssets(target_flagnames.get(i)));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.setMargins(10,0,10,0);
+            layoutParams.setMargins(10,10,10,10);
             target_flags.addView(image, layoutParams);
         }
 
+        // For setting up the life images programmatically <3 <3 <3
         LinearLayout heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
         int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
         for(int i=0;i<remaining_lives;i++){
@@ -85,9 +91,20 @@ public class MemoGameFragment extends Fragment {
         }
 
         gridView = (GridView) view.findViewById(R.id.gridView);
-        gridView.setNumColumns(5);
-        gridAdapter = new GridViewAdapter(view.getContext(), R.layout.grid_item_layout, flagNames);
+        gridView.setNumColumns(target_flagnames.size());
+
+        gridAdapter = new GridViewAdapter(view.getContext(), R.layout.grid_item_layout, flag_list);
         gridView.setAdapter(gridAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                Log.i("ITEM", item);
+                Log.i("ID", ""+id);
+                Log.i("POSITION", ""+position);
+            }
+        });
         return view;
     }
 
