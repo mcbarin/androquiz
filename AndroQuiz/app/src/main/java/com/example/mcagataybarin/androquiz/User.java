@@ -9,7 +9,7 @@ package com.example.mcagataybarin.androquiz;
     */
 
 public class User {
-    String username;
+    public String username;
     User(String username){
         this.username = username;
     }

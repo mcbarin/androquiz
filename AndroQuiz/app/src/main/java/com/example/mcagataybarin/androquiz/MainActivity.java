@@ -9,6 +9,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         User usr = new User(username.getText().toString());
         QuestionData.getInstance().initialize();
         QuestionData.getInstance().setUser(usr);
-        Intent intent = new Intent(this, CategoryActivity.class);
+
+        Intent intent = new Intent(this, ListActivity.class);
         MainActivity.this.startActivity(intent);
 
     }
