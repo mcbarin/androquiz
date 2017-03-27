@@ -112,7 +112,7 @@ public class MemoGameFragment extends Fragment {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
-            public void onItemClick(AdapterView<?> parent, View local_view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View local_view, final int position, long id) {
                 String item = (String) parent.getItemAtPosition(position);
                 Log.i("ITEM", item);
 
@@ -171,16 +171,17 @@ public class MemoGameFragment extends Fragment {
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
                     isAnyFlagOpen = true;
+                    isSuccessfull = false;
                     if (image != null) {
                         showFlag(image);
                         // Show flag for 5 seconds.
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(!isSuccessfull)
+                                if(!MemoData.getInstance().isFlagMatched(position))
                                     hideFlag(image);
                                 isAnyFlagOpen = false;
-                                isSuccessfull = false;
+
                             }
                         }, 5000);
 

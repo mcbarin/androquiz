@@ -157,4 +157,8 @@ class MemoData {
     public void setCellUnclickable(int position){
         clickableCells.add(position);
     }
+
+    public boolean isFlagMatched(int position){
+        return this.clickableCells.contains(position);
+    }
 }
