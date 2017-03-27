@@ -16,11 +16,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity" />
-
-
-	<activity android:name=".ListActivity" />
-	<activity android:name=".QuestionActivity" />
+<<<<<<< HEAD
+        <activity android:name=".QuestionActivity" />
         <activity android:name=".TempActivity"></activity>
+=======
+        <activity android:name=".ListActivity" />
+        <activity android:name=".QuestionActivity"></activity>
+>>>>>>> master
     </application>
 
 </manifest>

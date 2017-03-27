@@ -9,8 +9,8 @@ package com.example.mcagataybarin.androquiz;
 * This class is created for Question object and holds the necessary information for each question object.
 * */
 public class Question {
-    String question;
-    String[] choices = new String[4];
+    public String question;
+    public String[] choices = new String[4];
     int answer, point, status=3;
     // 0-> false, 1-> true, 2-> no time, 3-> not opened
 

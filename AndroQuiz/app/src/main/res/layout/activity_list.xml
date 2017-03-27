@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <fragment
-        class="com.example.mcagataybarin.androquiz.Fragments.CategoryFragment"
-        android:id="@+id/category_frag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+<fragment
+          class="com.example.mcagataybarin.androquiz.Fragments.ListFragment"
+          android:id="@+id/list_frag"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+    />
 
 </LinearLayout>
