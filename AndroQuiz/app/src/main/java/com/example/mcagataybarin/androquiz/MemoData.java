@@ -17,6 +17,8 @@ class MemoData {
     public ArrayList<ArrayList<String>> target_flags;
     public ArrayList<ArrayList<String>> flag_list;
 
+    public ArrayList<Integer> clickableCells;
+
     private static final MemoData ourInstance = new MemoData();
 
     static MemoData getInstance() {
@@ -34,6 +36,7 @@ class MemoData {
         this.lifePoint = new LifePoint();
         this.currentUser = user;
         this.initialize_flags();
+        clickableCells = new ArrayList<>();
     }
 
     public void initialize_flags(){
@@ -147,5 +150,11 @@ class MemoData {
         return this.flag_list.get(level-1);
     }
 
+    public boolean isCellClickable(int position){
+        return !clickableCells.contains(position);
+    }
 
+    public void setCellUnclickable(int position){
+        clickableCells.add(position);
+    }
 }

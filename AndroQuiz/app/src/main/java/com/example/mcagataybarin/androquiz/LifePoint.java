@@ -5,8 +5,8 @@ package com.example.mcagataybarin.androquiz;
  */
 
 public class LifePoint {
-    private int maxLife = 4;
-    private int remainingLife = 4;
+    private int maxLife = 5;
+    private int remainingLife = maxLife;
 
     public int getMaxLife() {
         return maxLife;

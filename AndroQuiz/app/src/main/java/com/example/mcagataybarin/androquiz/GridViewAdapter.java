@@ -69,4 +69,9 @@ public class GridViewAdapter extends ArrayAdapter {
         return bitmap;
     }
 
+    @Override
+    public boolean isEnabled(int position){
+        return MemoData.getInstance().isCellClickable(position);
+    }
+
 }

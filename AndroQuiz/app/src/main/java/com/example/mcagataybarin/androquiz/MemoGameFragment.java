@@ -44,6 +44,8 @@ public class MemoGameFragment extends Fragment {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     private View view;
+    Resources res;
+
 
     // For handling the choosing flags.
     int lastOpenedFlagPosition;
@@ -76,7 +78,7 @@ public class MemoGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        res = getContext().getResources();
         view = inflater.inflate(R.layout.fragment_memo_game, container, false);
 
         // First get the flag data from MemoData class.
@@ -128,22 +130,32 @@ public class MemoGameFragment extends Fragment {
 
                         isAnyFlagOpen = false;
                         isSuccessfull = true;
+
                         showFlag(image);
+
+                        // Hide the flag from target flag list
+                        removeFlagFromTargetList(item);
+
+                        // Make both images unclickable.
+                        MemoData.getInstance().setCellUnclickable(position);
+                        MemoData.getInstance().setCellUnclickable(lastOpenedFlagPosition);
                     }else {
                         // Then it failed.
                         Log.i("STATUS", "WRONG");
+                        isSuccessfull = false;
+                        isAnyFlagOpen = false;
                         MemoData.getInstance().lifePoint.decrementRemainingLife();
                         heart_images.removeViewAt(0);
+                        final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
+
                         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
                         if (isFailed){
                             // GAME OVER;
                             Toast.makeText(getContext(), "Game Over", Toast.LENGTH_LONG).show();
+                            hideFlag(previousImage);
+                            hideFlag(image);
                             gridView.setEnabled(false); // Disable the gridView.
                         }else{
-                            final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
-
-                            isSuccessfull = false;
-                            isAnyFlagOpen = false;
 
                             // Hide the flag after one second.
                             new Handler().postDelayed(new Runnable() {
@@ -156,7 +168,6 @@ public class MemoGameFragment extends Fragment {
                         }
                     }
                 }else {
-                    isSuccessfull = false; // Turn this to false again.
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
                     isAnyFlagOpen = true;
@@ -168,6 +179,8 @@ public class MemoGameFragment extends Fragment {
                             public void run() {
                                 if(!isSuccessfull)
                                     hideFlag(image);
+                                isAnyFlagOpen = false;
+                                isSuccessfull = false;
                             }
                         }, 5000);
 
@@ -237,7 +250,6 @@ public class MemoGameFragment extends Fragment {
     }
 
     public void hideFlag(ImageView image){
-        Resources res = getContext().getResources();
         final int newColor = res.getColor(R.color.flag_unvisible);
         image.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
     }
@@ -276,5 +288,17 @@ public class MemoGameFragment extends Fragment {
         int current_score = MemoData.getInstance().score.getScore();
         TextView score = (TextView) view.findViewById(R.id.memo_score);
         score.setText("Score: " + ""+ current_score);
+    }
+
+    public void removeFlagFromTargetList(String flagName){
+        LinearLayout targetFlags = (LinearLayout) view.findViewById(R.id.target_flags_images);
+        ArrayList<String> targetFlagName = MemoData.getInstance().target_flags.get(mLevel-1);
+        for (int i=0; i<targetFlagName.size(); i++){
+            if (targetFlagName.get(i).equals(flagName)){
+                View targetView = targetFlags.getChildAt(i);
+                targetView.setVisibility(View.INVISIBLE);
+                break;
+            }
+        }
     }
 }
