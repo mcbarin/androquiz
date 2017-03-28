@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         MemoData.getInstance().initialize(usr);
-        Intent intent = new Intent(this, TempActivity.class);
+        //Intent intent = new Intent(this, TempActivity.class);
+        //
+        Intent intent = new Intent(this, ListActivity.class);
         MainActivity.this.startActivity(intent);
 
     }
