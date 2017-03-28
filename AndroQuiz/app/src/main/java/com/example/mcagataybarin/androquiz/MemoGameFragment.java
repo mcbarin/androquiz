@@ -6,11 +6,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +44,7 @@ public class MemoGameFragment extends Fragment {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     private View view;
+    private LinearLayout heart_images;
     Resources res;
 
 
@@ -52,6 +53,7 @@ public class MemoGameFragment extends Fragment {
     String lastOpenedFlagName;
     boolean isAnyFlagOpen = false;
     boolean isSuccessfull = false;
+    int remainingTargetFlags;
 
     private OnFragmentInteractionListener mListener;
 
@@ -80,6 +82,7 @@ public class MemoGameFragment extends Fragment {
                              Bundle savedInstanceState) {
         res = getContext().getResources();
         view = inflater.inflate(R.layout.fragment_memo_game, container, false);
+        remainingTargetFlags = mLevel + 3;
 
         // First get the flag data from MemoData class.
         ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
@@ -96,8 +99,8 @@ public class MemoGameFragment extends Fragment {
         }
 
         // For setting up the life images programmatically <3 <3 <3
-        final LinearLayout heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
-        int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
+        heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
+        final int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
         for(int i=0;i<remaining_lives;i++){
             ImageView heart = new ImageView(view.getContext());
             heart.setBackground(getResources().getDrawable(R.drawable.heart));
@@ -109,6 +112,8 @@ public class MemoGameFragment extends Fragment {
         gridView.setEnabled(false);
         gridAdapter = new GridViewAdapter(view.getContext(), R.layout.grid_item_layout, flag_list);
         gridView.setAdapter(gridAdapter);
+
+        updateScore(view);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -131,21 +136,47 @@ public class MemoGameFragment extends Fragment {
                         isAnyFlagOpen = false;
                         isSuccessfull = true;
 
-                        showFlag(image);
-
                         // Hide the flag from target flag list
                         removeFlagFromTargetList(item);
 
                         // Make both images unclickable.
                         MemoData.getInstance().setCellUnclickable(position);
                         MemoData.getInstance().setCellUnclickable(lastOpenedFlagPosition);
+
+                        // Check if game is ended with success or not.
+                        remainingTargetFlags -= 1;
+                        if (remainingTargetFlags == 0){
+                            // Game ended, go to next level. If this is the last level, show game score.
+                            if (mLevel != 3){
+                                // Check the fragment container for tablet or phone.
+                                View fragmentContainer = getView().findViewById(R.id.fragment_container);
+                                MemoData.getInstance().levelUp();
+                                // Prepare the fragment.
+                                MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
+
+                                if (fragmentContainer != null){ // Tablet
+                                    android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    transaction.replace(R.id.fragment_container, fragment).commit();
+                                } else{ // Phone
+                                    Log.d("PHONE", "PHONE");
+                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    transaction.replace(R.id.memo_fragment, fragment).commit();
+                                }
+                            } else{
+                                // Level 3. Game is successfully finished.
+                                // TODO: Prepare a score fragment and show it to the user when game finished.
+                            }
+                        }
                     }else {
                         // Then it failed.
                         Log.i("STATUS", "WRONG");
                         isSuccessfull = false;
                         isAnyFlagOpen = false;
-                        MemoData.getInstance().lifePoint.decrementRemainingLife();
-                        heart_images.removeViewAt(0);
+
+                        decrementLifePoint();
+
                         final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
 
                         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
@@ -178,8 +209,10 @@ public class MemoGameFragment extends Fragment {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(!MemoData.getInstance().isFlagMatched(position))
+                                if(!MemoData.getInstance().isFlagMatched(position)) {
                                     hideFlag(image);
+                                    // TODO: Fix the bug when called decrementLifePoint();
+                                }
                                 isAnyFlagOpen = false;
 
                             }
@@ -196,7 +229,6 @@ public class MemoGameFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -220,7 +252,7 @@ public class MemoGameFragment extends Fragment {
         mListener = null;
     }
 
-
+    // Returns a Bitmap object from assets folder with given file name argument.
     public Bitmap ImageViaAssets(String fileName){
 
         AssetManager assetmanager = getContext().getAssets();
@@ -301,5 +333,11 @@ public class MemoGameFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    // Remove one life point of user.
+    public void decrementLifePoint(){
+        MemoData.getInstance().lifePoint.decrementRemainingLife();
+        heart_images.removeViewAt(0);
     }
 }

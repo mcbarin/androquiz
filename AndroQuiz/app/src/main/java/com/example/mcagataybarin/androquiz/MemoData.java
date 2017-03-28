@@ -1,6 +1,9 @@
 package com.example.mcagataybarin.androquiz;
 
-import android.util.Log;
+
+import com.example.mcagataybarin.androquiz.Models.LifePoint;
+import com.example.mcagataybarin.androquiz.Models.Score;
+import com.example.mcagataybarin.androquiz.Models.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,13 +31,16 @@ class MemoData {
     private MemoData() {
     }
 
+    public void setUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
     /*
-    * Initializes the Memory Game's data.
-    * */
-    public void initialize(User user){
+        * Initializes the Memory Game's data.
+        * */
+    public void initialize(){
         this.score = new Score();
         this.lifePoint = new LifePoint();
-        this.currentUser = user;
         this.initialize_flags();
         clickableCells = new ArrayList<>();
     }
@@ -160,5 +166,9 @@ class MemoData {
 
     public boolean isFlagMatched(int position){
         return this.clickableCells.contains(position);
+    }
+
+    public void levelUp(){
+        this.clickableCells.clear();
     }
 }

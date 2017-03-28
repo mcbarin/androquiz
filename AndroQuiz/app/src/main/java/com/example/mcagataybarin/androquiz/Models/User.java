@@ -1,4 +1,4 @@
-package com.example.mcagataybarin.androquiz;
+package com.example.mcagataybarin.androquiz.Models;
 
 /**
  * Created by mcagataybarin on 2/25/17.
@@ -10,7 +10,7 @@ package com.example.mcagataybarin.androquiz;
 
 public class User {
     public String username;
-    User(String username){
+    public User(String username){
         this.username = username;
     }
     

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class TempActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener {
+public class MemoGameActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

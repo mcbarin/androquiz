@@ -1,17 +1,14 @@
 package com.example.mcagataybarin.androquiz;
 
-import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.example.mcagataybarin.androquiz.Fragments.CategoryFragment;
 import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
-import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
 
 
 /**
@@ -41,8 +38,10 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
     public void itemClicked(long id) {
 
         View fragmentContainer = findViewById(R.id.fragment_container);
+
         if (fragmentContainer != null) {
             if(((int) id) == 0) {
+                QuestionData.getInstance().initialize(); // initialize game.
                 details = new CategoryFragment();
                 details.isLarge = true;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -51,6 +50,7 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             } else{
+                MemoData.getInstance().initialize();
                 MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -58,10 +58,12 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
             }
         } else {
             if(((int) id) == 0) {
+                QuestionData.getInstance().initialize();
                 Intent intent = new Intent(this, CategoryActivity.class);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(this, TempActivity.class);
+                MemoData.getInstance().initialize();
+                Intent intent = new Intent(this, MemoGameActivity.class);
                 startActivity(intent);
             }
         }

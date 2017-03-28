@@ -27,8 +27,8 @@ public class ListFragment extends android.app.ListFragment {
         //lecture7workoutlistfragmentadapter
         String[] names = new String[2];
 
-        names[0] = "Category 1";
-        names[1] = "Category 2";
+        names[0] = "Quiz Game";
+        names[1] = "Memory Game";
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 inflater.getContext(),

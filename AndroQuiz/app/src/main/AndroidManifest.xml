@@ -18,7 +18,7 @@
         <activity android:name=".CategoryActivity" />
 	<activity android:name=".ListActivity" />
 	<activity android:name=".QuestionActivity" />
-        <activity android:name=".TempActivity" />
+        <activity android:name=".MemoGameActivity" />
 
     </application>
 

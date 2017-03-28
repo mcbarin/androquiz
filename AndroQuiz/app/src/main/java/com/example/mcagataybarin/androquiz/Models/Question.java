@@ -1,4 +1,6 @@
-package com.example.mcagataybarin.androquiz;
+package com.example.mcagataybarin.androquiz.Models;
+
+import com.example.mcagataybarin.androquiz.QuestionData;
 
 /**
  * Created by mcagataybarin on 2/26/17.

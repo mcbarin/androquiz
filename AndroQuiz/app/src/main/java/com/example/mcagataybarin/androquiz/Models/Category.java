@@ -1,4 +1,4 @@
-package com.example.mcagataybarin.androquiz;
+package com.example.mcagataybarin.androquiz.Models;
 
 /**
  * Created by mcagataybarin on 2/26/17.

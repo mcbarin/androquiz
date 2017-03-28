@@ -1,5 +1,9 @@
 package com.example.mcagataybarin.androquiz;
 
+import com.example.mcagataybarin.androquiz.Models.Category;
+import com.example.mcagataybarin.androquiz.Models.Question;
+import com.example.mcagataybarin.androquiz.Models.User;
+
 /**
  * Created by mcagataybarin on 2/26/17.
  */

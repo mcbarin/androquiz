@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.List;
+import com.example.mcagataybarin.androquiz.Models.User;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,13 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
         EditText username = (EditText) findViewById(R.id.editText);
         User usr = new User(username.getText().toString());
-        QuestionData.getInstance().initialize();
+
+        // Initialize users for both games.
         QuestionData.getInstance().setUser(usr);
+        MemoData.getInstance().setUser(usr);
 
-
-        MemoData.getInstance().initialize(usr);
-        //Intent intent = new Intent(this, TempActivity.class);
-        //
         Intent intent = new Intent(this, ListActivity.class);
         MainActivity.this.startActivity(intent);
 

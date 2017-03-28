@@ -12,7 +12,6 @@
             android:id="@+id/memo_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Score: 0"
             android:textColor="@android:color/black"
             android:textSize="20dp"
             android:layout_marginLeft="10dp"
