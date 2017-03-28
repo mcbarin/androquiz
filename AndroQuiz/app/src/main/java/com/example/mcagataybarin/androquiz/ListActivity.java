@@ -27,6 +27,10 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
         setContentView(R.layout.activity_list);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+    }
 
     public void restartGame(View view){
         Intent intent = new Intent(this, MainActivity.class);
@@ -49,13 +53,26 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
             } else{
                 MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.add(R.id.fragment_container, fragment).commit();
             }
         } else {
             if(((int) id) == 0) {
                 Intent intent = new Intent(this, CategoryActivity.class);
                 startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, TempActivity.class);
+                startActivity(intent);
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
