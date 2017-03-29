@@ -4,6 +4,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -53,8 +54,10 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
                 MemoData.getInstance().initialize();
                 MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment);
+                transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.add(R.id.fragment_container, fragment).commit();
+                transaction.commit();
             }
         } else {
             if(((int) id) == 0) {

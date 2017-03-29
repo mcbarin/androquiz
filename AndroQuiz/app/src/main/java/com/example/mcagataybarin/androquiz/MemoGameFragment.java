@@ -39,7 +39,7 @@ import java.util.ArrayList;
  * Use the {@link MemoGameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MemoGameFragment extends Fragment {
+public class MemoGameFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "mLevel";
 
@@ -161,11 +161,12 @@ public class MemoGameFragment extends Fragment {
                                 MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
 
                                 if (fragmentContainer != null){ // Tablet
+                                    Log.i("PLACE", "TABLET");
                                     android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                                     transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     transaction.replace(R.id.fragment_container, fragment).commit();
                                 } else{ // Phone
-                                    Log.d("PHONE", "PHONE");
+                                    Log.i("PLACE", "PHONE");
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                     transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     transaction.replace(R.id.memo_fragment, fragment).commit();
@@ -281,6 +282,11 @@ public class MemoGameFragment extends Fragment {
         return bitmap;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -359,16 +365,18 @@ public class MemoGameFragment extends Fragment {
             gridView.setEnabled(false); // Disable the gridView.
 
             // Show score page.
-            View fragmentContainer = getView().findViewById(R.id.fragment_container);
+            View fragmentContainer = getActivity().findViewById(R.id.fragment_container);
             EndGameFragment fragment = EndGameFragment.newInstance("memo");
 
-            if (fragmentContainer != null) { // Tablet
-                android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            if (fragmentContainer != null) { //  Tablet
+                Log.i("LIFE", "TABLET");
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.replace(R.id.fragment_container, fragment).commit();
             } else { // Phone
+                Log.i("LIFE", "PHONE");
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.replace(R.id.memo_fragment, fragment).commit();
             }
 
