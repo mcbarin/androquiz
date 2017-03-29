@@ -65,8 +65,6 @@
             android:stretchMode="columnWidth"
             />
 
-
-
     </RelativeLayout>
 
 </FrameLayout>

@@ -1,0 +1,64 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mcagataybarin.androquiz.EndGameFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/endGameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:layout_marginTop="20sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="40sp"
+            android:gravity="center"
+            android:textStyle="normal|bold"
+            android:text="Hello Memo!"
+            />
+
+        <TextView
+            android:id="@+id/endGameScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/endGameTitle"
+            android:layout_marginTop="30sp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textStyle="normal|bold"
+            android:textSize="30sp"
+            android:text="Your Score: 1600"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/endGameScore"
+            android:layout_marginTop="30sp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/holo_purple"
+            android:textStyle="normal|bold"
+            android:textSize="20sp"
+            android:text="Do You Want To Play Again?"/>
+
+        <Button
+            android:id="@+id/endRestartButton"
+            android:text="RESTART"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/roundbutton"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

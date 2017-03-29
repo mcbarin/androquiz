@@ -1,6 +1,7 @@
 package com.example.mcagataybarin.androquiz;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,11 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,6 +87,7 @@ public class MemoGameFragment extends Fragment {
         res = getContext().getResources();
         view = inflater.inflate(R.layout.fragment_memo_game, container, false);
         remainingTargetFlags = mLevel + 3;
+
 
         // First get the flag data from MemoData class.
         ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
@@ -147,9 +152,10 @@ public class MemoGameFragment extends Fragment {
                         remainingTargetFlags -= 1;
                         if (remainingTargetFlags == 0){
                             // Game ended, go to next level. If this is the last level, show game score.
+                            View fragmentContainer = getView().findViewById(R.id.fragment_container);
+
                             if (mLevel != 3){
                                 // Check the fragment container for tablet or phone.
-                                View fragmentContainer = getView().findViewById(R.id.fragment_container);
                                 MemoData.getInstance().levelUp();
                                 // Prepare the fragment.
                                 MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
@@ -166,7 +172,18 @@ public class MemoGameFragment extends Fragment {
                                 }
                             } else{
                                 // Level 3. Game is successfully finished.
-                                // TODO: Prepare a score fragment and show it to the user when game finished.
+
+                                EndGameFragment fragment = EndGameFragment.newInstance("memo");
+
+                                if (fragmentContainer != null){
+                                    android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    transaction.replace(R.id.fragment_container, fragment).commit();
+                                } else{ // Phone
+                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    transaction.replace(R.id.memo_fragment, fragment).commit();
+                                }
                             }
                         }
                     }else {
@@ -174,30 +191,26 @@ public class MemoGameFragment extends Fragment {
                         Log.i("STATUS", "WRONG");
                         isSuccessfull = false;
                         isAnyFlagOpen = false;
+                        gridView.setEnabled(false); // disable the grid view from click.
 
                         decrementLifePoint();
 
                         final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
 
                         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
-                        if (isFailed){
-                            // GAME OVER;
-                            Toast.makeText(getContext(), "Game Over", Toast.LENGTH_LONG).show();
-                            hideFlag(previousImage);
-                            hideFlag(image);
-                            gridView.setEnabled(false); // Disable the gridView.
-                        }else{
-
+                        if (!isFailed) {
                             // Hide the flag after one second.
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     hideFlag(image);
                                     hideFlag(previousImage);
+                                    gridView.setEnabled(true); // Enable the grid view again.
                                 }
-                            },1500);
+                            }, 2000);
                         }
                     }
+
                 }else {
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
@@ -211,7 +224,8 @@ public class MemoGameFragment extends Fragment {
                             public void run() {
                                 if(!MemoData.getInstance().isFlagMatched(position)) {
                                     hideFlag(image);
-                                    // TODO: Fix the bug when called decrementLifePoint();
+                                    if(isAnyFlagOpen)
+                                        decrementLifePoint();
                                 }
                                 isAnyFlagOpen = false;
 
@@ -336,8 +350,31 @@ public class MemoGameFragment extends Fragment {
     }
 
     // Remove one life point of user.
-    public void decrementLifePoint(){
+    public void decrementLifePoint() {
         MemoData.getInstance().lifePoint.decrementRemainingLife();
-        heart_images.removeViewAt(0);
+
+        boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
+        if (isFailed) {
+            // GAME OVER;
+            gridView.setEnabled(false); // Disable the gridView.
+
+            // Show score page.
+            View fragmentContainer = getView().findViewById(R.id.fragment_container);
+            EndGameFragment fragment = EndGameFragment.newInstance("memo");
+
+            if (fragmentContainer != null) { // Tablet
+                android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.replace(R.id.fragment_container, fragment).commit();
+            } else { // Phone
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.replace(R.id.memo_fragment, fragment).commit();
+            }
+
+        } else {
+
+            heart_images.removeViewAt(0);
+        }
     }
 }

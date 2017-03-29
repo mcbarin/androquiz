@@ -138,11 +138,17 @@ class MemoData {
         }
         return numbers;
     }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     /*
-    * Checks if a given array contains the given number.
-    * */
+        * Checks if a given array contains the given number.
+        * */
     private boolean isDuplicate(int[] numbers, int count, int newNumber){
         for (int i=0; i<count; i++){
+
             if (numbers[i] == newNumber) return true;
         }
         return false;

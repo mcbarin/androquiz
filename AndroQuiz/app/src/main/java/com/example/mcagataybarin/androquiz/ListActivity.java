@@ -15,7 +15,7 @@ import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
  * Created by aea on 25/03/17.
  */
 
-public class ListActivity extends AppCompatActivity implements ListFragment.WorkoutListListener, MemoGameFragment.OnFragmentInteractionListener{
+public class ListActivity extends AppCompatActivity implements ListFragment.WorkoutListListener, MemoGameFragment.OnFragmentInteractionListener, EndGameFragment.OnFragmentInteractionListener{
     public static CategoryFragment details;
 
     @Override
