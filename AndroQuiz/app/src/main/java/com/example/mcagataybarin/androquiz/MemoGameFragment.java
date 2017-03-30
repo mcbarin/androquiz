@@ -313,7 +313,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     }
 
     private ImageView getImageViewAtIndex(int index){
-        ImageView image_view = (ImageView) gridView.getChildAt(index);
+        View image_view = gridView.getChildAt(index);
 
         if (image_view != null)
             return (ImageView) image_view.findViewById(R.id.grid_image);
