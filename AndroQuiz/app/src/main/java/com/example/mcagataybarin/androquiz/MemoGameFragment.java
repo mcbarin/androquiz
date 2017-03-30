@@ -98,8 +98,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         for(int i=0; i<target_flagnames.size(); i++){
             ImageView image = new ImageView(view.getContext());
             image.setImageBitmap(ImageViaAssets(target_flagnames.get(i)));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.MATCH_PARENT);
             layoutParams.setMargins(10,10,10,10);
+            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             target_flags.addView(image, layoutParams);
         }
 
@@ -312,7 +313,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     }
 
     private ImageView getImageViewAtIndex(int index){
-        View image_view = gridView.getChildAt(index);
+        ImageView image_view = (ImageView) gridView.getChildAt(index);
 
         if (image_view != null)
             return (ImageView) image_view.findViewById(R.id.grid_image);
