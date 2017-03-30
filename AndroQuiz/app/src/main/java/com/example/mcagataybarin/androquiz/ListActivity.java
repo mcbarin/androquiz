@@ -54,6 +54,7 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Work
             } else{
                 MemoData.getInstance().initialize();
                 MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
+                fragment.isLarge = true;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.fragment_container, fragment);

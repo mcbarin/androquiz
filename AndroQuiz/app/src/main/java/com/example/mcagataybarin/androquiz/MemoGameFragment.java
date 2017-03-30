@@ -50,6 +50,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     private View view;
     private LinearLayout heart_images;
     Resources res;
+    public boolean isLarge = false;
 
 
     // For handling the choosing flags.
@@ -138,6 +139,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         Log.i("STATUS", "RIGHT");
                         MemoData.getInstance().score.incrementScore();
                         updateScore(view);
+                        gridView.setEnabled(false);
 
                         isAnyFlagOpen = false;
                         isSuccessfull = true;
@@ -161,9 +163,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                 // Prepare the fragment.
                                 MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
 
-                                if (fragmentContainer != null){ // Tablet
+                                if (isLarge){ // Tablet
                                     Log.i("PLACE", "TABLET");
-                                    android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                                    android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                     transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     transaction.replace(R.id.fragment_container, fragment).commit();
                                 } else{ // Phone
@@ -188,6 +190,27 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                 }
                             }
                         }
+                        //TODO:
+
+                        final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
+
+                        boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
+                        if (!isFailed) {
+                            // Hide the flag after one second.
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    hideFlag(image);
+                                    hideFlag(previousImage);
+                                    gridView.setEnabled(true); // Enable the grid view again.
+                                }
+                            }, 5000);
+                        }
+
+
+                        //TODO:
+
                     }else {
                         // Then it failed.
                         Log.i("STATUS", "WRONG");
@@ -209,7 +232,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                     hideFlag(previousImage);
                                     gridView.setEnabled(true); // Enable the grid view again.
                                 }
-                            }, 2000);
+                            }, 5000);
                         }
                     }
 
@@ -221,9 +244,15 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                     if (image != null) {
                         showFlag(image);
                         // Show flag for 5 seconds.
+                        //TODO:
+                        //TODO: HIZLICA 2 FLAG AÇIP SONRA DANDIRIRDAN PRINT ETMESINI BEKLEDIKTEN
+                        //TODO:  SONRA TEKRAR OYNADIĞIN SÜRECE SORUN OLMUYOR
+                        //TODO:  AMA BAZEN GG OLUYO OYUN Bİ BAKARSIN
+
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d("DAN","DANDIRIRIRIDAN");
                                 if(!MemoData.getInstance().isFlagMatched(position)) {
                                     hideFlag(image);
                                     if(isAnyFlagOpen)
