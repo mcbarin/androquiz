@@ -33,7 +33,6 @@ public class QuestionActivity extends Activity{
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); // For fullscreen activity.
         setContentView(R.layout.activity_question);
 
-
         QuestionFragment cf = (QuestionFragment) getFragmentManager().findFragmentById(R.id.question_frag);
 
         Intent intent = getIntent();

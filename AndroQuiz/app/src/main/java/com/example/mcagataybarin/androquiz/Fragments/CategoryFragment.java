@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.QuestionData;
+import com.example.mcagataybarin.androquiz.QuizActivity2;
 import com.example.mcagataybarin.androquiz.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -29,6 +30,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     View vieww;
     public boolean isLarge;
     public int result;
+    private Intent intent;
     private int questionNumber;
     private int categoryNumber;
     QuestionFragment qfrag;
@@ -104,7 +106,12 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     */
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), QuestionActivity.class);
+//        if(isLarge){
+//            intent = new Intent(getActivity(), QuizActivity2.class);
+//        } else {
+//            intent = new Intent(getActivity(), QuestionActivity.class);
+//        }
+        intent = new Intent(getActivity(), QuestionActivity.class);
         switch (v.getId()){
             case R.id.c1q1:
                 intent.putExtra("category", 0);

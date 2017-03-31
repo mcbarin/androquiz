@@ -16,10 +16,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity" />
-	<activity android:name=".ListActivity" />
-	<activity android:name=".QuestionActivity" />
+        <activity android:name=".ListActivity" />
+        <activity android:name=".QuestionActivity" />
         <activity android:name=".MemoGameActivity" />
-
+        <activity android:name=".QuizActivity2"></activity>
     </application>
 
 </manifest>
