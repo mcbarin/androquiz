@@ -43,7 +43,6 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "mLevel";
 
-    // TODO: Rename and change types of parameters
     private int mLevel; // 1,2 or 3
     private GridView gridView;
     private GridViewAdapter gridAdapter;
@@ -57,7 +56,6 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     int lastOpenedFlagPosition;
     String lastOpenedFlagName;
     boolean isAnyFlagOpen = false;
-    boolean isSuccessfull = false;
     int remainingTargetFlags;
 
     private OnFragmentInteractionListener mListener;
@@ -99,9 +97,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         for(int i=0; i<target_flagnames.size(); i++){
             ImageView image = new ImageView(view.getContext());
             image.setImageBitmap(ImageViaAssets(target_flagnames.get(i)));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
             layoutParams.setMargins(10,10,10,10);
-            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             target_flags.addView(image, layoutParams);
         }
 
@@ -139,10 +137,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         Log.i("STATUS", "RIGHT");
                         MemoData.getInstance().score.incrementScore();
                         updateScore(view);
-                        gridView.setEnabled(false);
+
 
                         isAnyFlagOpen = false;
-                        isSuccessfull = true;
 
                         // Hide the flag from target flag list
                         removeFlagFromTargetList(item);
@@ -190,44 +187,21 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                 }
                             }
                         }
-                        //TODO:
-
-                        final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
-
-                        boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
-                        if (!isFailed) {
-                            // Hide the flag after one second.
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    hideFlag(image);
-                                    hideFlag(previousImage);
-                                    gridView.setEnabled(true); // Enable the grid view again.
-                                }
-                            }, 5000);
-                        }
-
-
-                        //TODO:
-
                     }else {
                         // Then it failed.
                         Log.i("STATUS", "WRONG");
-                        isSuccessfull = false;
                         isAnyFlagOpen = false;
                         gridView.setEnabled(false); // disable the grid view from click.
 
                         decrementLifePoint();
 
-                        final ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
-
                         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
                         if (!isFailed) {
                             // Hide the flag after one second.
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    ImageView previousImage = getImageViewAtIndex(lastOpenedFlagPosition);
                                     hideFlag(image);
                                     hideFlag(previousImage);
                                     gridView.setEnabled(true); // Enable the grid view again.
@@ -240,22 +214,18 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
                     isAnyFlagOpen = true;
-                    isSuccessfull = false;
                     if (image != null) {
                         showFlag(image);
                         // Show flag for 5 seconds.
-                        //TODO:
-                        //TODO: HIZLICA 2 FLAG AÇIP SONRA DANDIRIRDAN PRINT ETMESINI BEKLEDIKTEN
-                        //TODO:  SONRA TEKRAR OYNADIĞIN SÜRECE SORUN OLMUYOR
-                        //TODO:  AMA BAZEN GG OLUYO OYUN Bİ BAKARSIN
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 Log.d("DAN","DANDIRIRIRIDAN");
                                 if(!MemoData.getInstance().isFlagMatched(position)) {
-                                    hideFlag(image);
-                                    if(isAnyFlagOpen)
+                                    if (isAnyFlagOpen)
+                                        hideFlag(image);
+                                    if(isAnyFlagOpen && lastOpenedFlagPosition == position)
                                         decrementLifePoint();
                                 }
                                 isAnyFlagOpen = false;

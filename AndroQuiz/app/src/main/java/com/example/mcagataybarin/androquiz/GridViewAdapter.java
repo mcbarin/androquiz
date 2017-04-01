@@ -42,7 +42,7 @@ public class GridViewAdapter extends ArrayAdapter {
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.image = (ImageView) row.findViewById(R.id.grid_image);
-            holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            holder.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
