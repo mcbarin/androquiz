@@ -40,9 +40,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class MemoGameFragment extends Fragment implements View.OnClickListener{
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "mLevel";
-
     private int mLevel; // 1,2 or 3
     private GridView gridView;
     private GridViewAdapter gridAdapter;
@@ -92,6 +90,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
         ArrayList<String> flag_list = MemoData.getInstance().getFlagList(mLevel);
 
+        // Hear we add the target flags to the linear layout programmatically.
         LinearLayout target_flags = (LinearLayout) view.findViewById(R.id.target_flags_images);
 
         for(int i=0; i<target_flagnames.size(); i++){
@@ -120,6 +119,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
         updateScore(view);
 
+        // We handle all of the interactions of user with flags in this click listener.
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View local_view, final int position, long id) {
@@ -130,6 +130,10 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 showFlag(image);
 
                 if(isAnyFlagOpen){
+                    // First check if same item is clicked or not.
+                    if (lastOpenedFlagPosition == position)
+                        return;
+
                     // Then check if it's same or not.
                     boolean isSame = lastOpenedFlagName.equals(item);
                     if (isSame){
@@ -137,7 +141,6 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         Log.i("STATUS", "RIGHT");
                         MemoData.getInstance().score.incrementScore();
                         updateScore(view);
-
 
                         isAnyFlagOpen = false;
 
@@ -176,7 +179,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
                                 EndGameFragment fragment = EndGameFragment.newInstance("memo");
 
-                                if (fragmentContainer != null){
+                                if (fragmentContainer != null){ // Tablet
                                     android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                                     transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     transaction.replace(R.id.fragment_container, fragment).commit();
@@ -188,16 +191,16 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                             }
                         }
                     }else {
-                        // Then it failed.
+                        // User failed to match the flags.
                         Log.i("STATUS", "WRONG");
                         isAnyFlagOpen = false;
-                        gridView.setEnabled(false); // disable the grid view from click.
+                        gridView.setEnabled(false); // disable the grid view from click actions.
 
                         decrementLifePoint();
 
                         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
                         if (!isFailed) {
-                            // Hide the flag after one second.
+                            // Hide the flag after 5 seconds.
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -210,7 +213,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         }
                     }
 
-                }else {
+                }else { // If all flags are closed and this is the first one;
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
                     isAnyFlagOpen = true;
@@ -302,11 +305,13 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         void onFragmentInteraction(Uri uri);
     }
 
+    // This function hides the flag picture.
     public void hideFlag(ImageView image){
         final int newColor = res.getColor(R.color.flag_unvisible);
         image.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
     }
 
+    // This function shows the hidden flag again.
     public void showFlag(ImageView image){
         image.setColorFilter(null);
     }
@@ -319,6 +324,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         return null;
     }
 
+    /*
+    * This method shows the flags on start for 5 seconds, then hides it and game starts.
+    * */
     public void showFlagsOnStart(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -337,12 +345,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    // Updates the score in the fragment.
     public void updateScore(View view){
         int current_score = MemoData.getInstance().score.getScore();
         TextView score = (TextView) view.findViewById(R.id.memo_score);
         score.setText("Score: " + ""+ current_score);
     }
 
+    // This method takes a flag name and hides it from target flags.
     public void removeFlagFromTargetList(String flagName){
         LinearLayout targetFlags = (LinearLayout) view.findViewById(R.id.target_flags_images);
         ArrayList<String> targetFlagName = MemoData.getInstance().target_flags.get(mLevel-1);
@@ -355,7 +365,8 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    // Remove one life point of user.
+    // Remove one life point of user and also hides one of the heart images from fragment.
+    // Also it checks for losing conditions and show the score fragment.
     public void decrementLifePoint() {
         MemoData.getInstance().lifePoint.decrementRemainingLife();
 
@@ -381,8 +392,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
             }
 
         } else {
-
-            heart_images.removeViewAt(0);
+            heart_images.removeViewAt(0); // Delete heart.
         }
     }
 }

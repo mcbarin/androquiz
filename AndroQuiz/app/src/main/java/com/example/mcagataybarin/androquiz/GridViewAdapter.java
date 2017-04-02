@@ -56,6 +56,7 @@ public class GridViewAdapter extends ArrayAdapter {
         ImageView image;
     }
 
+    // This function is used for showing images from assets.
     public Bitmap ImageViaAssets(String fileName){
 
         AssetManager assetmanager = context.getAssets();
@@ -70,6 +71,7 @@ public class GridViewAdapter extends ArrayAdapter {
         return bitmap;
     }
 
+    // This override function is used for getting the isClickable answer for each grid item.
     @Override
     public boolean isEnabled(int position){
         return MemoData.getInstance().isCellClickable(position);

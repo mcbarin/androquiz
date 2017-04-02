@@ -45,6 +45,9 @@ class MemoData {
         clickableCells = new ArrayList<>();
     }
 
+    /*
+    * This function initializes the info about memory game.
+    * */
     public void initialize_flags(){
         target_flags = new ArrayList<ArrayList<String>>();
         flag_list = new ArrayList<ArrayList<String>>();
