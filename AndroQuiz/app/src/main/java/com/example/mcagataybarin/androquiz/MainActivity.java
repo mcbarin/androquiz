@@ -33,17 +33,5 @@ public class MainActivity extends AppCompatActivity {
     * It will also initialize the QuestionData class so that all information will be returned to
     * its initial point.
     */
-    public void usernameEntered(View view) {
 
-        EditText username = (EditText) findViewById(R.id.editText);
-        User usr = new User(username.getText().toString());
-
-        // Initialize users for both games.
-        QuestionData.getInstance().setUser(usr);
-        MemoData.getInstance().setUser(usr);
-
-        Intent intent = new Intent(this, ListActivity.class);
-        MainActivity.this.startActivity(intent);
-
-    }
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blueishPurple"
+    tools:context="com.example.mcagataybarin.androquiz.RegisterActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GameOS"
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="80dp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/nameField"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="username"
+        android:inputType="text"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        />
+
+    <EditText
+        android:id="@+id/emailRegister"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="e-mail"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        android:layout_marginTop="2dp"/>
+
+    <EditText
+        android:id="@+id/passwordRegister"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        android:layout_marginTop="2dp"/>
+
+    <EditText
+        android:id="@+id/nameUser"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="name"
+        android:inputType="textPersonName"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        android:layout_marginTop="2dp"/>
+
+    <EditText
+        android:id="@+id/surnameUser"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="surname"
+        android:inputType="textPersonName"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        android:layout_marginTop="2dp"/>
+
+    <EditText
+        android:id="@+id/cityUser"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="city"
+        android:inputType="text"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:textColor="@color/bestPurple"
+        android:layout_marginTop="2dp"/>
+
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:onClick="onClickRegister"
+        android:text="Register"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="@color/blueBg"/>
+
+</LinearLayout>
