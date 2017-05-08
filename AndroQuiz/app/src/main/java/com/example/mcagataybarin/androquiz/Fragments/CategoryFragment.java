@@ -19,6 +19,7 @@ import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.QuestionData;
 import com.example.mcagataybarin.androquiz.QuizActivity2;
 import com.example.mcagataybarin.androquiz.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -248,7 +249,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     */
     public void updateInfo(){
         TextView gameInfo = (TextView) vieww.findViewById(R.id.gameInfo);
-        String username = QuestionData.getInstance().getUser().username;
+        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         int point = QuestionData.getInstance().getPoint();
         gameInfo.setText(String.format("User: %s  Point: %d", username, point));
     }
