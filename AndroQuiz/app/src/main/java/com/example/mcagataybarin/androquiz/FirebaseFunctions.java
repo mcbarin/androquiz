@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-class FirebaseFunctions {
+public class FirebaseFunctions {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     protected String currentWeek = "";
@@ -33,7 +33,7 @@ class FirebaseFunctions {
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
 
-    static FirebaseFunctions getInstance() {
+    public static FirebaseFunctions getInstance() {
         return ourInstance;
     }
 
@@ -70,6 +70,29 @@ class FirebaseFunctions {
 
     // Returns the user object by its id.
     public void getUserById(final Runnable onLoaded, String id) {
+
+            this.user_id = id;
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            DatabaseReference ref = mDatabase.child("users").child(id);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        temp_user = dataSnapshot.getValue(User.class);
+                    }
+                    onLoaded.run();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+    }
+
+    // Returns the user object by its id.
+    public void getUserById(String id) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         DatabaseReference ref = mDatabase.child("users").child(id);
@@ -79,7 +102,6 @@ class FirebaseFunctions {
                 if (dataSnapshot.exists()) {
                     temp_user = dataSnapshot.getValue(User.class);
                 }
-                onLoaded.run();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

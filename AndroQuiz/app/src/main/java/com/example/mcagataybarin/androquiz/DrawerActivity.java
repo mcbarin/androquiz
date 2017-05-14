@@ -1,6 +1,7 @@
 package com.example.mcagataybarin.androquiz;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -20,9 +21,11 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 
 import com.example.mcagataybarin.androquiz.Fragments.CategoryFragment;
+import com.example.mcagataybarin.androquiz.Fragments.EditProfileFragment;
 import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
 import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
 import com.example.mcagataybarin.androquiz.Models.Category;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DrawerActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener, EndGameFragment.OnFragmentInteractionListener{
 
@@ -45,6 +48,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     private int currentPosition = 0;
 
     private String[] titles;
+    Fragment fragment = null;
     private ListView drawerList;
 
     @Override
@@ -92,35 +96,11 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        //lecture11fragmentsync
-//        getFragmentManager().addOnBackStackChangedListener(
-//                new FragmentManager.OnBackStackChangedListener() {
-//                    public void onBackStackChanged() {
-//                        FragmentManager fragMan = getFragmentManager();
-//                        Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
-//                        if (fragment instanceof TopFragment) {
-//                            currentPosition = 0;
-//                        }
-//                        if (fragment instanceof PizzaFragment) {
-//                            currentPosition = 1;
-//                        }
-//                        if (fragment instanceof PastaFragment) {
-//                            currentPosition = 2;
-//                        }
-//                        if (fragment instanceof StoresFragment) {
-//                            currentPosition = 3;
-//                        }
-//                        setActionBarTitle(currentPosition);
-//                        drawerList.setItemChecked(currentPosition, true);
-//                    }
-//                }
-//        );
     }
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
         currentPosition = position;
-        Fragment fragment = null;
         CategoryFragment fragment3 = null;
         MemoGameFragment fragment2 = null;
         switch (position) {
@@ -129,33 +109,60 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 MemoData.getInstance().initialize();
                 //fragment2.isLarge = true;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.content_frame, fragment2);
                 transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.commit();
                 break;
             case 2:
-                //profile
+
+                final DialogFragment newFragment = new LoadFragment();
+                newFragment.show(getFragmentManager(), "loader");
+
+                if(FirebaseFunctions.getInstance().temp_user != null){
+                    fragment = new EditProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    newFragment.dismiss();
+                    ft.commit();
+                }
+                else {
+                    FirebaseFunctions.getInstance().getUserById(new Runnable() {
+                        public void run() {
+                            fragment = new EditProfileFragment();
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.addToBackStack(null);
+
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            newFragment.dismiss();
+                            ft.commit();
+
+                        }
+                    }, FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                }
+
+
+
+
+
                 break;
             case 3:
-                //fragment = new StoresFragment();
-                FragmentTransaction ft2 = getFragmentManager().beginTransaction();
-                //getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-                ft2.replace(R.id.content_frame, fragment, "visible_fragment");
-                ft2.addToBackStack(null);
-                ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft2.commit();
-                break;
+                //friends
+            case 4:
+                //rankings
             default:
                 QuestionData.getInstance().initialize(); // initialize game.
                 fragment3 = new CategoryFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-                ft.replace(R.id.content_frame, fragment3);
-                ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.commit();
+                FragmentTransaction ft3 = getFragmentManager().beginTransaction();
+                ft3.replace(R.id.content_frame, fragment3);
+                ft3.addToBackStack(null);
+                ft3.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft3.commit();
                 //fragment3.isLarge = true;
         }
 
