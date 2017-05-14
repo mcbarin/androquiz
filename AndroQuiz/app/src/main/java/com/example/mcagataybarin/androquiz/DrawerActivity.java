@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,17 +19,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.ShareActionProvider;
 
 import com.example.mcagataybarin.androquiz.Fragments.CategoryFragment;
 import com.example.mcagataybarin.androquiz.Fragments.EditProfileFragment;
+import com.example.mcagataybarin.androquiz.Fragments.FriendsFragment;
 import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
 import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
 import com.example.mcagataybarin.androquiz.Models.Category;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class DrawerActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener, EndGameFragment.OnFragmentInteractionListener{
+import java.util.ArrayList;
 
+public class DrawerActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener, EndGameFragment.OnFragmentInteractionListener {
+
+
+    private boolean friendsFragment = false;
+    private FriendsFragment frag2;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -48,7 +56,6 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     private int currentPosition = 0;
 
     private String[] titles;
-    Fragment fragment = null;
     private ListView drawerList;
 
     @Override
@@ -103,12 +110,17 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         currentPosition = position;
         CategoryFragment fragment3 = null;
         MemoGameFragment fragment2 = null;
+        FriendsFragment frag = null;
+        final Fragment[] fragment = new Fragment[1];
+        friendsFragment = false;
         switch (position) {
             case 1:
-                fragment2 =  MemoGameFragment.newInstance(1);
+                fragment2 = MemoGameFragment.newInstance(1);
                 MemoData.getInstance().initialize();
                 //fragment2.isLarge = true;
+
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                getFragmentManager().popBackStack(null, getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.content_frame, fragment2);
                 transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -119,22 +131,21 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 final DialogFragment newFragment = new LoadFragment();
                 newFragment.show(getFragmentManager(), "loader");
 
-                if(FirebaseFunctions.getInstance().temp_user != null){
-                    fragment = new EditProfileFragment();
+                if (FirebaseFunctions.getInstance().temp_user != null) {
+                    fragment[0] = new EditProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
+                    ft.replace(R.id.content_frame, fragment[0]);
                     ft.addToBackStack(null);
 
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     newFragment.dismiss();
                     ft.commit();
-                }
-                else {
+                } else {
                     FirebaseFunctions.getInstance().getUserById(new Runnable() {
                         public void run() {
-                            fragment = new EditProfileFragment();
+                            fragment[0] = new EditProfileFragment();
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.replace(R.id.content_frame, fragment);
+                            ft.replace(R.id.content_frame, fragment[0]);
                             ft.addToBackStack(null);
 
                             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -143,16 +154,18 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
                         }
                     }, FirebaseAuth.getInstance().getCurrentUser().getUid());
-
                 }
-
-
-
-
-
                 break;
             case 3:
-                //friends
+                friendsFragment=true;
+                frag2 = new FriendsFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, frag2);
+                ft.addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            //friends
             case 4:
                 //rankings
             default:
@@ -183,9 +196,42 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     }
 
     @Override
+    public void onBackPressed(){
+        friendsFragment = false;
+        invalidateOptionsMenu();
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the drawer is open, hide action items related to the content view
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+        MenuItem item = menu.findItem(R.id.menuSearch);
+
+        if (friendsFragment) item.setVisible(true);
+
+        SearchView sv = (SearchView) item.getActionView();
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                System.out.println("query : " + query);
+
+                FriendsFragment.Request re = new FriendsFragment.Request(FirebaseFunctions.getInstance().getCurrentUserId(),
+                        FirebaseFunctions.getInstance().temp_user);
+
+                frag2.requests.add(re);
+                frag2.my_list.notifyDataSetChanged();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -214,6 +260,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         //setIntent("This is example text");
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -224,7 +271,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         shareActionProvider.setShareIntent(intent);
     }
 
-    public void restartGame(View view){
+    public void restartGame(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
