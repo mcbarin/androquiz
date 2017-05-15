@@ -58,9 +58,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
 
         ListView lv = (ListView) view.findViewById(R.id.listview);
-        Request re = new Request(FirebaseFunctions.getInstance().getCurrentUserId(),FirebaseFunctions.getInstance().temp_user);
-        requests.add(re);
-        my_list = new MyListAdaper(getActivity(), R.layout.friends_user, requests);
+        my_list = new MyListAdaper(getActivity(), R.layout.friends_user, FirebaseFunctions.getInstance().all_users);
         lv.setAdapter(my_list);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,7 +73,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     System.out.println("Has notiften dönen: " + hasNotif );
                     if(!hasNotif) notif.setVisibility(View.VISIBLE);
                     ListView lv = (ListView) view.findViewById(R.id.listview);
-                    my_list = new MyListAdaper(getActivity(), R.layout.friends_user, requests);
+                    my_list = new MyListAdaper(getActivity(), R.layout.friends_user, FirebaseFunctions.getInstance().all_users);
                     lv.setAdapter(my_list);
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -89,7 +87,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             System.out.println("Has notiften dönen: else içi bu " + hasNotif );
             if(!hasNotif) notif.setVisibility(View.VISIBLE);
             ListView lv2 = (ListView) view.findViewById(R.id.listview);
-            my_list = new MyListAdaper(getActivity(), R.layout.friends_user, requests);
+            my_list = new MyListAdaper(getActivity(), R.layout.friends_user, FirebaseFunctions.getInstance().all_users);
             lv2.setAdapter(my_list);
             lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -103,10 +101,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public class MyListAdaper extends ArrayAdapter<Request> {
+    public class MyListAdaper extends ArrayAdapter<FirebaseFunctions.UserID> {
         private int layout;
-        private ArrayList<Request> mObjects;
-        public MyListAdaper(Context context, int resource, ArrayList<Request> objects) {
+        private ArrayList<FirebaseFunctions.UserID> mObjects;
+        public MyListAdaper(Context context, int resource, ArrayList<FirebaseFunctions.UserID> objects) {
             super(context, resource, objects);
             mObjects = objects;
             layout = resource;
@@ -125,23 +123,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 viewHolder.button = (Button) convertView.findViewById(R.id.list_item_btn);
                 viewHolder.button2 = (Button) convertView.findViewById(R.id.list_item_btn2);
 
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                mDatabase.child("users").child(getItem(position).request).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user_read = dataSnapshot.getValue(User.class);
-                        if(!(user_read == null)) {
-                            // Req atan user ahu
-                            viewHolder.title.setText(user_read.name + "\nCity: " + user_read.city);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
+                //viewHolder.button.setVisibility(View.INVISIBLE);
+                viewHolder.title.setText(getItem(position).user.username + " " + getItem(position).user.name);
 
                 convertView.setTag(viewHolder);
             }
@@ -153,7 +136,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
                     v.startAnimation(shake);
                     User temp = getItem(position).user;
-                    String user_id = getItem(position).request;
+                    String user_id = getItem(position).id;
                     temp.requests.remove(user_id);
                     if(temp.friends == null){
                         temp.friends = new ArrayList<String>();
@@ -176,7 +159,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
                     v.startAnimation(shake);
                     User temp = getItem(position).user;
-                    String user_id = getItem(position).request;
+                    String user_id = getItem(position).id;
                     temp.requests.remove(user_id);
                     FirebaseFunctions.getInstance().postUserDirect(temp);
 
@@ -189,6 +172,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                 }
             });
+
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -207,30 +191,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         Button button2;
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        // If the drawer is open, hide action items related to the content view
-        MenuItem item = menu.findItem(R.id.menuSearch);
-        item.setVisible(true);
-        SearchView sv = (SearchView) item.getActionView();
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                System.out.println("query2222 : " + query);
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        super.onPrepareOptionsMenu(menu);
-
-    }
-
     public static class Request{
 
         public String request;
@@ -241,7 +201,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             this.user = user;
 
         }
-
     }
 
     public void retrieveUserFriends(final Runnable onLoaded) {

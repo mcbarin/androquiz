@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Oooppss! Try Again.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Intent intent = new Intent(RegisterActivity.this, ListActivity.class);
+                            Intent intent = new Intent(RegisterActivity.this, DrawerActivity.class);
                             RegisterActivity.this.startActivity(intent);
                         }
                     }

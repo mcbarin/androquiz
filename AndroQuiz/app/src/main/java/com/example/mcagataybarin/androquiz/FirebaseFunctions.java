@@ -1,6 +1,7 @@
 package com.example.mcagataybarin.androquiz;
 
 import android.util.Log;
+import android.view.View;
 
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +33,8 @@ public class FirebaseFunctions {
     public User temp_user;
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
+
+    public ArrayList<UserID> all_users;
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;
@@ -108,6 +111,51 @@ public class FirebaseFunctions {
             }
         });
 
+    }
+
+
+    public void retrieveUsers(final Runnable onLoaded) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("users");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        String id = issue.getKey();
+
+                        User event = issue.getValue(User.class);
+//                        Log.d("Event ", event.city + " " + event.movie + " " + event.event_id);
+                        UserID temp = new UserID(id, event);
+                        if(all_users == null){
+                            all_users = new ArrayList<UserID>();
+                        }
+                        all_users.add(temp);
+                    }
+                    onLoaded.run();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+
+
+    public static class UserID{
+
+        public String id;
+        public User user;
+
+        public UserID(String id, User user){
+            this.id = id;
+            this.user = user;
+
+        }
     }
 
     public void postUserDirect(User temp) {

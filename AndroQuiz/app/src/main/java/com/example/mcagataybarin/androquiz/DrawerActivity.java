@@ -28,6 +28,7 @@ import com.example.mcagataybarin.androquiz.Fragments.FriendsFragment;
 import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
 import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
 import com.example.mcagataybarin.androquiz.Models.Category;
+import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -157,13 +158,41 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 }
                 break;
             case 3:
+
+                final DialogFragment newFragment2 = new LoadFragment();
+                newFragment2.show(getFragmentManager(), "loader");
                 friendsFragment=true;
-                frag2 = new FriendsFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, frag2);
-                ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.commit();
+                if(FirebaseFunctions.getInstance().all_users != null){
+
+                    frag2 = new FriendsFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, frag2);
+                    ft.addToBackStack(null);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    newFragment2.dismiss();
+                    ft.commit();
+
+                }else{
+
+                    FirebaseFunctions.getInstance().retrieveUsers(new Runnable() {
+                        public void run() {
+                            ArrayList<FirebaseFunctions.UserID> a = FirebaseFunctions.getInstance().all_users;
+                            for(int i = 0; i< a.size();i ++){
+                                System.out.println("user suan:: " + a.get(i).id + " user: " + a.get(i).user);
+                            }
+
+                            frag2 = new FriendsFragment();
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, frag2);
+                            ft.addToBackStack(null);
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            ft.commit();
+
+                            newFragment2.dismiss();
+                        }
+                    });
+
+                }
                 break;
             //friends
             case 4:
@@ -217,11 +246,23 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
             public boolean onQueryTextSubmit(String query) {
                 System.out.println("query : " + query);
 
-                FriendsFragment.Request re = new FriendsFragment.Request(FirebaseFunctions.getInstance().getCurrentUserId(),
-                        FirebaseFunctions.getInstance().temp_user);
+//                FriendsFragment.Request re = new FriendsFragment.Request(FirebaseFunctions.getInstance().getCurrentUserId(),
+//                        FirebaseFunctions.getInstance().temp_user);
+//
+//                frag2.requests.add(re);
+//                frag2.my_list.notifyDataSetChanged();
+                ArrayList<FirebaseFunctions.UserID> arl = FirebaseFunctions.getInstance().all_users;
+                for(int i = 0; i<arl.size();i++){
+                    FirebaseFunctions.UserID temp = arl.get(i);
 
-                frag2.requests.add(re);
-                frag2.my_list.notifyDataSetChanged();
+                    if(temp.user.username.toLowerCase().contains(query.toLowerCase()) ||
+                    temp.user.surname.toLowerCase().contains(query.toLowerCase()) ||
+                            temp.user.name.toLowerCase().contains(query.toLowerCase())){
+                        System.out.println("MATCH VAR : " + temp);
+                    }
+
+                }
+
 
                 return false;
             }
