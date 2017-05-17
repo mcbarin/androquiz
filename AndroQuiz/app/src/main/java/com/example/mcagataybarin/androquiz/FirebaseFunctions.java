@@ -34,7 +34,7 @@ public class FirebaseFunctions {
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
 
-    public ArrayList<UserID> all_users;
+    public ArrayList<UserID> all_users, all_users2;
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;
@@ -133,6 +133,10 @@ public class FirebaseFunctions {
                         }
                         all_users.add(temp);
                     }
+                    if(all_users2== null) all_users2 = new ArrayList<UserID>();
+                    for(int i =0;i<all_users.size();i++){
+                        all_users2.add(all_users.get(i));
+                    }
                     onLoaded.run();
                 }
             }
@@ -143,7 +147,6 @@ public class FirebaseFunctions {
         });
 
     }
-
 
 
     public static class UserID{

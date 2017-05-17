@@ -5,8 +5,11 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -64,6 +67,8 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        System.out.println("INTERNET CONNECTION? ::   " + isNetworkAvailable());
+
         titles = getResources().getStringArray(R.array.titles);
         drawerList = (ListView) findViewById(R.id.drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -106,12 +111,21 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     private void selectItem(int position) {
         // update the main content by replacing fragments
         currentPosition = position;
         CategoryFragment fragment3 = null;
         MemoGameFragment fragment2 = null;
         FriendsFragment frag = null;
+
+
         final Fragment[] fragment = new Fragment[1];
         friendsFragment = false;
         switch (position) {
@@ -163,8 +177,13 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 newFragment2.show(getFragmentManager(), "loader");
                 friendsFragment=true;
                 if(FirebaseFunctions.getInstance().all_users != null){
+                    System.out.println("şuan null değil ve burdayım ve size : " + FirebaseFunctions.getInstance().all_users2.size() );
 
                     frag2 = new FriendsFragment();
+                    FirebaseFunctions.getInstance().all_users = new ArrayList<FirebaseFunctions.UserID>();
+                    for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
+                        frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                    }
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, frag2);
                     ft.addToBackStack(null);
@@ -176,12 +195,14 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
                     FirebaseFunctions.getInstance().retrieveUsers(new Runnable() {
                         public void run() {
-                            ArrayList<FirebaseFunctions.UserID> a = FirebaseFunctions.getInstance().all_users;
-                            for(int i = 0; i< a.size();i ++){
-                                System.out.println("user suan:: " + a.get(i).id + " user: " + a.get(i).user);
-                            }
 
                             frag2 = new FriendsFragment();
+                            ArrayList<FirebaseFunctions.UserID> a = FirebaseFunctions.getInstance().all_users;
+                            for(int i = 0; i< a.size();i ++){
+                                frag2.requests.add(a.get(i));
+                            }
+
+
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.replace(R.id.content_frame, frag2);
                             ft.addToBackStack(null);
@@ -235,43 +256,6 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the drawer is open, hide action items related to the content view
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-        MenuItem item = menu.findItem(R.id.menuSearch);
-
-        if (friendsFragment) item.setVisible(true);
-
-        SearchView sv = (SearchView) item.getActionView();
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                System.out.println("query : " + query);
-
-//                FriendsFragment.Request re = new FriendsFragment.Request(FirebaseFunctions.getInstance().getCurrentUserId(),
-//                        FirebaseFunctions.getInstance().temp_user);
-//
-//                frag2.requests.add(re);
-//                frag2.my_list.notifyDataSetChanged();
-                ArrayList<FirebaseFunctions.UserID> arl = FirebaseFunctions.getInstance().all_users;
-                for(int i = 0; i<arl.size();i++){
-                    FirebaseFunctions.UserID temp = arl.get(i);
-
-                    if(temp.user.username.toLowerCase().contains(query.toLowerCase()) ||
-                    temp.user.surname.toLowerCase().contains(query.toLowerCase()) ||
-                            temp.user.name.toLowerCase().contains(query.toLowerCase())){
-                        System.out.println("MATCH VAR : " + temp);
-                    }
-
-                }
-
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
 
         return super.onPrepareOptionsMenu(menu);
     }
