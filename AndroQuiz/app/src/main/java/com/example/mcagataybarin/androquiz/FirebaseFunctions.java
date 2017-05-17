@@ -3,6 +3,7 @@ package com.example.mcagataybarin.androquiz;
 import android.util.Log;
 import android.view.View;
 
+import com.example.mcagataybarin.androquiz.Models.Question;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -35,6 +36,7 @@ public class FirebaseFunctions {
     private Task dbTask = dbSource.getTask();
 
     public ArrayList<UserID> all_users, all_users2;
+    public ArrayList<Question> temp_questions = new ArrayList<>();
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;
@@ -146,6 +148,30 @@ public class FirebaseFunctions {
             }
         });
 
+    }
+
+    public void getCategoryQuestions(final Runnable onLoaded, int categoryIndex){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("quiz").child(String.valueOf(categoryIndex));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    for (DataSnapshot issue: dataSnapshot.getChildren()) {
+                        Question question = new Question(issue);
+                        temp_questions.add(question);
+                    }
+                    onLoaded.run();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
