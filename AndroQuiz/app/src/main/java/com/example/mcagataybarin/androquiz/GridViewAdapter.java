@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,12 +29,16 @@ public class GridViewAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResourceId;
     private ArrayList<String> flags;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     public GridViewAdapter(Context context, int layoutResourceId, ArrayList<String> flags) {
         super(context, layoutResourceId, flags);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.flags = flags;
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
     }
 
     @Override
@@ -47,7 +56,8 @@ public class GridViewAdapter extends ArrayAdapter {
         } else {
             holder = (ViewHolder) row.getTag();
         }
-        holder.image.setImageBitmap(ImageViaAssets(flags.get(position)));
+        StorageReference flagReference = storageReference.child(flags.get(position));
+        Glide.with(context).using(new FirebaseImageLoader()).load(flagReference).into(holder.image);
         return row;
     }
 

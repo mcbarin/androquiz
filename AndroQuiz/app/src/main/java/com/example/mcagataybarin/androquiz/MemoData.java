@@ -119,7 +119,7 @@ class MemoData {
         int[] randomNumbers = this.getRandomNumbersInRange(count);
 
         for(int i=0;i<count;i++){
-            flagNames[i] = "MemoGameFlags/img" + ""+randomNumbers[i] + ".png";
+            flagNames[i] = "img" + ""+randomNumbers[i] + ".png";
         }
         return flagNames;
     }

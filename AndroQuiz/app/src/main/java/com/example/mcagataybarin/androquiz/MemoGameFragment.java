@@ -24,6 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -48,7 +53,8 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     private LinearLayout heart_images;
     Resources res;
     public boolean isLarge = false;
-
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     // For handling the choosing flags.
     int lastOpenedFlagPosition;
@@ -85,6 +91,8 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         view = inflater.inflate(R.layout.fragment_memo_game, container, false);
         remainingTargetFlags = mLevel + 3;
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         // First get the flag data from MemoData class.
         ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
@@ -95,7 +103,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
         for(int i=0; i<target_flagnames.size(); i++){
             ImageView image = new ImageView(view.getContext());
-            image.setImageBitmap(ImageViaAssets(target_flagnames.get(i)));
+            Glide.with(getContext()).using(new FirebaseImageLoader()).load(storageReference.child(target_flagnames.get(i))).into(image);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
             layoutParams.setMargins(10,10,10,10);
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
