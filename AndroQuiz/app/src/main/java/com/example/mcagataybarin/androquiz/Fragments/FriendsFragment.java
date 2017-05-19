@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.Models.User;
+import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,11 +51,11 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public MyListAdaper my_list;
     private View view;
     private TextView notif;
-    private boolean aradi  = false;
+    private boolean aradi = false;
     private boolean requestSayf = false;
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu){
+    public void onPrepareOptionsMenu(Menu menu) {
         aradi = false;
         MenuItem item = menu.findItem(R.id.menuSearch);
         item.setVisible(true);
@@ -69,23 +70,24 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                 ArrayList<FirebaseFunctions.UserID> arl = new ArrayList<FirebaseFunctions.UserID>();
 
-                for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
+                for (int i = 0; i < FirebaseFunctions.getInstance().all_users2.size(); i++) {
                     arl.add(FirebaseFunctions.getInstance().all_users2.get(i));
                 }
                 my_list.clear();
-                for(int i = 0; i<arl.size();i++){
+                for (int i = 0; i < arl.size(); i++) {
                     FirebaseFunctions.UserID temp = arl.get(i);
 
-                    if(temp.user.username.toLowerCase().contains(query.toLowerCase()) ||
+                    if (temp.user.username.toLowerCase().contains(query.toLowerCase()) ||
                             temp.user.surname.toLowerCase().contains(query.toLowerCase()) ||
-                            temp.user.name.toLowerCase().contains(query.toLowerCase())){
+                            temp.user.name.toLowerCase().contains(query.toLowerCase())) {
                         //Matched
-                        System.out.println("şuanki uzer match: "+ temp.user);
-                        if(!(temp.id.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id))
-                                && !FirebaseFunctions.getInstance().temp_user.user.friends.contains(temp.id)) requests.add(temp);
+                        System.out.println("şuanki uzer match: " + temp.user);
+                        if (!(temp.id.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id))
+                                && !FirebaseFunctions.getInstance().temp_user.user.friends.contains(temp.id))
+                            requests.add(temp);
                         my_list.notifyDataSetChanged();
 
-                    }else {
+                    } else {
                         requests.remove(temp);
                         my_list.notifyDataSetChanged();
                     }
@@ -131,6 +133,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public class MyListAdaper extends ArrayAdapter<FirebaseFunctions.UserID> {
         private int layout;
         private ArrayList<FirebaseFunctions.UserID> mObjects;
+
         public MyListAdaper(Context context, int resource, ArrayList<FirebaseFunctions.UserID> objects) {
             super(context, resource, objects);
             mObjects = objects;
@@ -141,7 +144,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             ViewHolder mainViewholder = null;
-            if(convertView == null) {
+            if (convertView == null) {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(layout, parent, false);
                 final ViewHolder viewHolder = new ViewHolder();
@@ -150,7 +153,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 viewHolder.button = (Button) convertView.findViewById(R.id.list_item_btn);
                 viewHolder.button2 = (Button) convertView.findViewById(R.id.list_item_btn2);
 
-                if(aradi){ viewHolder.button2.setVisibility(View.INVISIBLE); viewHolder.button.setText("Add Friend");}
+                if (aradi) {
+                    viewHolder.button2.setVisibility(View.INVISIBLE);
+                    viewHolder.button.setText("Add Friend");
+                }
 
                 viewHolder.title.setText(getItem(position).user.username + " " + getItem(position).user.name);
 
@@ -162,8 +168,12 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
             mainViewholder.button2.setVisibility(View.INVISIBLE);
             mainViewholder.button.setText("Challenge");
-            if(aradi){  mainViewholder.button.setText("Add Friend");}
-            if(requestSayf){  mainViewholder.button.setText("Confirm Request");}
+            if (aradi) {
+                mainViewholder.button.setText("Add Friend");
+            }
+            if (requestSayf) {
+                mainViewholder.button.setText("Confirm Request");
+            }
 
             mainViewholder.title.setText(getItem(position).user.username + " " + getItem(position).user.name);
             mainViewholder.button.setOnClickListener(new View.OnClickListener() {
@@ -174,14 +184,14 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     User temp = getItem(position).user;
                     String user_id = getItem(position).id;
 
-                    if(aradi) {
+                    if (aradi) {
                         if (temp.requests == null) {
                             temp.requests = new ArrayList<String>();
                         }
 
                         temp.requests.add(user_id);
                         FirebaseFunctions.getInstance().postUserDirect(temp, user_id);
-                    }else if(requestSayf){
+                    } else if (requestSayf) {
 
                         if (FirebaseFunctions.getInstance().temp_user.user.friends == null) {
                             FirebaseFunctions.getInstance().temp_user.user.friends = new ArrayList<String>();
@@ -192,6 +202,14 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         requests.remove(position);
                         FirebaseFunctions.getInstance().postUserDirect(FirebaseFunctions.getInstance().temp_user.user, FirebaseFunctions.getInstance().temp_user.id);
                         my_list.notifyDataSetChanged();
+                    } else {
+
+                        Intent intent = new Intent();
+                        intent = new Intent(getActivity(), QuestionActivity.class);
+
+                        intent.putExtra("category", 10);
+                        intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
+                        startActivity(intent);
                     }
 
 
@@ -212,7 +230,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     my_list.notifyDataSetChanged();
 
 
-                    if(!hasNotif) notif.setVisibility(View.VISIBLE);
+                    if (!hasNotif) notif.setVisibility(View.VISIBLE);
 
                 }
             });
@@ -228,6 +246,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             return convertView;
         }
     }
+
     public class ViewHolder {
 
         ImageView thumbnail;
@@ -250,7 +269,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         friends.add(event);
                     }
                     onLoaded.run();
-                }else{
+                } else {
                     notif.setVisibility(View.VISIBLE);
                 }
             }
@@ -283,22 +302,22 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        if(v.getId() == R.id.friendreq){
+        if (v.getId() == R.id.friendreq) {
             aradi = false;
             my_list.clear();
 
             FirebaseFunctions.UserID temp = FirebaseFunctions.getInstance().temp_user;
-            if(temp.user.requests != null) {
+            if (temp.user.requests != null) {
                 for (int i = 0; i < temp.user.requests.size(); i++) {
                     String user_id = temp.user.requests.get(i);
                     FirebaseFunctions.UserID tmp = null;
-                    for(int z = 0; z < FirebaseFunctions.getInstance().all_users2.size(); z++){
-                        if(FirebaseFunctions.getInstance().all_users2.get(z).id.equalsIgnoreCase(user_id)){
+                    for (int z = 0; z < FirebaseFunctions.getInstance().all_users2.size(); z++) {
+                        if (FirebaseFunctions.getInstance().all_users2.get(z).id.equalsIgnoreCase(user_id)) {
                             tmp = FirebaseFunctions.getInstance().all_users2.get(z);
                         }
                     }
-                    if(tmp != null) my_list.add(tmp);
-                    
+                    if (tmp != null) my_list.add(tmp);
+
                 }
             }
             requestSayf = true;

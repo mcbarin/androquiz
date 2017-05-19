@@ -13,8 +13,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mcagataybarin.androquiz.DrawerActivity;
+import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.Models.Category;
 import com.example.mcagataybarin.androquiz.Models.Question;
+import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.QuestionData;
 import com.example.mcagataybarin.androquiz.R;
 
@@ -49,10 +52,20 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
 
         v = getView();
-
-
-        Category c = QuestionData.getInstance().getCategories()[categoryNumber];
+        Category c = null;
+        if(categoryNumber == 10){
+            c = QuestionData.getInstance().getCategories()[0];
+        }else{
+            c = QuestionData.getInstance().getCategories()[categoryNumber];
+        }
         q = c.questions.get(questionNumber); // Question object is retrieved from QuestionData class.
+
+//        for(int i = 0;i <c.questions.size();i++){
+//            q = c.questions.get(i);
+//            System.out.println("soru : " + q.question);
+//        }
+
+
 
         // Question is displayed with a TextView
         TextView question = (TextView) v.findViewById(R.id.question);
@@ -127,12 +140,32 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
         // we are giving the result back to the CategoryActivity with the user's selected answer.
 
-        mActivity.setResult(RESULT_OK, intent);
-        intent.putExtra("result", status);
-        intent.putExtra("category", categoryNumber);
-        intent.putExtra("question", questionNumber);
-        mActivity.finish();
+        if(categoryNumber == 10){
+            if(FirebaseFunctions.getInstance().quNum == 4){
+                System.out.println("SCORE : SCORE : " + QuestionData.getInstance().getPoint());
+                FirebaseFunctions.getInstance().quNum = 0;
 
+                intent = new Intent(getActivity(), DrawerActivity.class);
+                startActivity(intent);
+
+            }else {
+
+                intent = new Intent(getActivity(), QuestionActivity.class);
+                FirebaseFunctions.getInstance().quNum++;
+                intent.putExtra("category", 10);
+                intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
+                startActivity(intent);
+
+            }
+
+
+        }else {
+            mActivity.setResult(RESULT_OK, intent);
+            intent.putExtra("result", status);
+            intent.putExtra("category", categoryNumber);
+            intent.putExtra("question", questionNumber);
+            mActivity.finish();
+        }
 
 
     }

@@ -35,6 +35,7 @@ import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class DrawerActivity extends AppCompatActivity implements MemoGameFragment.OnFragmentInteractionListener, EndGameFragment.OnFragmentInteractionListener {
 
@@ -187,6 +188,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
                     frag2 = new FriendsFragment();
                     FirebaseFunctions.getInstance().all_users = new ArrayList<FirebaseFunctions.UserID>();
+                    System.out.println("Size : " + FirebaseFunctions.getInstance().all_users2.size());
                     for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
                         //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
                         if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)){
@@ -194,6 +196,8 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                             System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
                         }
                     }
+
+                    frag2.requests = new ArrayList<>(new LinkedHashSet<>(frag2.requests));
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, frag2);
                     ft.addToBackStack(null);
@@ -207,16 +211,15 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                         public void run() {
 
                             frag2 = new FriendsFragment();
-                            ArrayList<FirebaseFunctions.UserID> a = FirebaseFunctions.getInstance().all_users;
-                            for(int i = 0; i< a.size();i ++){
-                                //frag2.requests.add(a.get(i));
-                                if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(a.get(i))){
-                                    frag2.requests.add(a.get(i));
+                            for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
+                                //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                                if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)){
+                                    frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                                    System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
                                 }
-
                             }
 
-
+                            frag2.requests = new ArrayList<>(new LinkedHashSet<>(frag2.requests));
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.replace(R.id.content_frame, frag2);
                             ft.addToBackStack(null);

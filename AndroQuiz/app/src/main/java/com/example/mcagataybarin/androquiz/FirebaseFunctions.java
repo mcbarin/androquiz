@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class FirebaseFunctions {
     public UserID temp_user;
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
+    public int quNum = 0;
 
     public ArrayList<UserID> all_users, all_users2;
     public ArrayList<Question> temp_questions = new ArrayList<>();
@@ -144,6 +146,7 @@ public class FirebaseFunctions {
                     for(int i =0;i<all_users.size();i++){
                         all_users2.add(all_users.get(i));
                     }
+                    all_users2 = new ArrayList<>(new LinkedHashSet<>(all_users2));
                     onLoaded.run();
                 }
             }
