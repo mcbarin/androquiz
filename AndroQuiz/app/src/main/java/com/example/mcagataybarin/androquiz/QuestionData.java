@@ -28,16 +28,31 @@ public class QuestionData {
     public void initialize(){
 
 
-        for (int i=0; i<categoryName.length; i++) {
-            final int index = i;
             FirebaseFunctions.getInstance().getCategoryQuestions(new Runnable() {
                 @Override
                 public void run() {
-                    Category cat = new Category(categoryName[index], FirebaseFunctions.getInstance().temp_questions);
-                    categories[0] = cat;
+                    ArrayList<Question> questions = FirebaseFunctions.getInstance().temp_questions;
+
+                    ArrayList<Question> questions1 = new ArrayList<>();
+                    questions1.addAll(questions.subList(0, 5));
+
+                    ArrayList<Question> questions2 = new ArrayList<>();
+                    questions2.addAll(questions.subList(5, 10));
+
+                    ArrayList<Question> questions3 = new ArrayList<>();
+                    questions3.addAll(questions.subList(10, 15));
+
+
+                    Category cat1 = new Category(categoryName[0], questions1);
+                    categories[0] = cat1;
+
+                    Category cat2 = new Category(categoryName[1], questions2);
+                    categories[1] = cat2;
+
+                    Category cat3 = new Category(categoryName[2], questions3);
+                    categories[2] = cat3;
                 }
-            }, i);
-        }
+            });
 
         this.point = 0;
         this.numAnsweredQuestions = 0;

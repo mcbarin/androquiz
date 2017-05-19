@@ -158,17 +158,19 @@ public class FirebaseFunctions {
 
     }
 
-    public void getCategoryQuestions(final Runnable onLoaded, int categoryIndex){
+    public void getCategoryQuestions(final Runnable onLoaded){
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = mDatabase.child("quiz").child(String.valueOf(categoryIndex));
+        final Query query = mDatabase.child("quiz");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     for (DataSnapshot issue: dataSnapshot.getChildren()) {
-                        Question question = new Question(issue);
-                        temp_questions.add(question);
+                        for (DataSnapshot questionData: issue.getChildren()) {
+                            Question question = new Question(questionData);
+                            temp_questions.add(question);
+                        }
                     }
                     onLoaded.run();
 
