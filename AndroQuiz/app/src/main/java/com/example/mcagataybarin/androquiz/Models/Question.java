@@ -1,6 +1,9 @@
 package com.example.mcagataybarin.androquiz.Models;
 
 import com.example.mcagataybarin.androquiz.QuestionData;
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
 
 /**
  * Created by mcagataybarin on 2/26/17.
@@ -12,15 +15,17 @@ import com.example.mcagataybarin.androquiz.QuestionData;
 * */
 public class Question {
     public String question;
-    public String[] choices = new String[4];
+    public ArrayList<String> choices = new ArrayList<>();
     int answer, point, status=3;
     // 0-> false, 1-> true, 2-> no time, 3-> not opened
 
-    public Question(String question, String[] choices, int answer, int point){
-        this.question = question;
-        this.choices = choices;
-        this.answer = answer;
-        this.point = point;
+    public Question(DataSnapshot dataSnapshot){
+        this.question = dataSnapshot.child("question").getValue().toString();
+        this.point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
+        this.answer = Integer.parseInt(dataSnapshot.child("answer").getValue().toString());
+        for (DataSnapshot issue: dataSnapshot.child("choices").getChildren()) {
+            this.choices.add(issue.getValue().toString());
+        }
     }
 
         /*

@@ -52,7 +52,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
 
         Category c = QuestionData.getInstance().getCategories()[categoryNumber];
-        q = c.questions[questionNumber]; // Question object is retrieved from QuestionData class.
+        q = c.questions.get(questionNumber); // Question object is retrieved from QuestionData class.
 
         // Question is displayed with a TextView
         TextView question = (TextView) v.findViewById(R.id.question);
@@ -63,10 +63,10 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         Button buttonC = (Button) v.findViewById(R.id.buttonC);
         Button buttonD = (Button) v.findViewById(R.id.buttonD);
 
-        buttonA.setText(q.choices[0]);
-        buttonB.setText(q.choices[1]);
-        buttonC.setText(q.choices[2]);
-        buttonD.setText(q.choices[3]);
+        buttonA.setText(q.choices.get(0));
+        buttonB.setText(q.choices.get(1));
+        buttonC.setText(q.choices.get(2));
+        buttonD.setText(q.choices.get(3));
 
         buttonA.setOnClickListener(this);
         buttonB.setOnClickListener(this);
