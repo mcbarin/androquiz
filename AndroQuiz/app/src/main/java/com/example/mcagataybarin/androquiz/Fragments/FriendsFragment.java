@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -50,6 +51,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private View view;
     private TextView notif;
     private boolean aradi  = false;
+    private boolean requestSayf = false;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){
@@ -62,6 +64,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 aradi = true;
+                requestSayf = false;
                 System.out.println("query : " + query);
 
                 ArrayList<FirebaseFunctions.UserID> arl = new ArrayList<FirebaseFunctions.UserID>();
@@ -78,7 +81,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             temp.user.name.toLowerCase().contains(query.toLowerCase())){
                         //Matched
                         System.out.println("şuanki uzer match: "+ temp.user);
-                        requests.add(temp);
+                        if(!(temp.id.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id))
+                                && !FirebaseFunctions.getInstance().temp_user.user.friends.contains(temp.id)) requests.add(temp);
                         my_list.notifyDataSetChanged();
 
                     }else {
@@ -107,6 +111,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.friends_fragment, container, false);
         notif = (TextView) view.findViewById(R.id.notif);
 
+        Button anan = (Button) view.findViewById(R.id.friendreq);
+        anan.setOnClickListener(this);
 
         ListView lv = (ListView) view.findViewById(R.id.listview);
 
@@ -154,7 +160,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
             mainViewholder = (ViewHolder) convertView.getTag();
 
-            if(aradi){ mainViewholder.button2.setVisibility(View.INVISIBLE); mainViewholder.button.setText("Add Friend");}
+            mainViewholder.button2.setVisibility(View.INVISIBLE);
+            mainViewholder.button.setText("Challenge");
+            if(aradi){  mainViewholder.button.setText("Add Friend");}
+            if(requestSayf){  mainViewholder.button.setText("Confirm Request");}
 
             mainViewholder.title.setText(getItem(position).user.username + " " + getItem(position).user.name);
             mainViewholder.button.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +180,18 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                         }
 
                         temp.requests.add(user_id);
-                        FirebaseFunctions.getInstance().postUserDirect(temp);
+                        FirebaseFunctions.getInstance().postUserDirect(temp, user_id);
+                    }else if(requestSayf){
+
+                        if (FirebaseFunctions.getInstance().temp_user.user.friends == null) {
+                            FirebaseFunctions.getInstance().temp_user.user.friends = new ArrayList<String>();
+                        }
+
+                        FirebaseFunctions.getInstance().temp_user.user.friends.add(user_id);
+                        FirebaseFunctions.getInstance().temp_user.user.requests.remove(user_id);
+                        requests.remove(position);
+                        FirebaseFunctions.getInstance().postUserDirect(FirebaseFunctions.getInstance().temp_user.user, FirebaseFunctions.getInstance().temp_user.id);
+                        my_list.notifyDataSetChanged();
                     }
 
 
@@ -186,7 +206,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     User temp = getItem(position).user;
                     String user_id = getItem(position).id;
                     temp.requests.remove(user_id);
-                    FirebaseFunctions.getInstance().postUserDirect(temp);
 
                     requests.remove(position);
                     my_list.clear();
@@ -202,7 +221,6 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     System.out.println("NEREYE BASTI BU AHU");
-
 
                 }
             });
@@ -257,12 +275,35 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); // For fullscreen activity.
         setHasOptionsMenu(true);
+        FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications");
 
 
     }
 
     @Override
     public void onClick(View v) {
+
+        if(v.getId() == R.id.friendreq){
+            aradi = false;
+            my_list.clear();
+
+            FirebaseFunctions.UserID temp = FirebaseFunctions.getInstance().temp_user;
+            if(temp.user.requests != null) {
+                for (int i = 0; i < temp.user.requests.size(); i++) {
+                    String user_id = temp.user.requests.get(i);
+                    FirebaseFunctions.UserID tmp = null;
+                    for(int z = 0; z < FirebaseFunctions.getInstance().all_users2.size(); z++){
+                        if(FirebaseFunctions.getInstance().all_users2.get(z).id.equalsIgnoreCase(user_id)){
+                            tmp = FirebaseFunctions.getInstance().all_users2.get(z);
+                        }
+                    }
+                    if(tmp != null) my_list.add(tmp);
+                    
+                }
+            }
+            requestSayf = true;
+            my_list.notifyDataSetChanged();
+        }
 
     }
 }

@@ -66,8 +66,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         save.setOnClickListener(this);
         FirebaseFunctions.getInstance().getUserById(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        temp = FirebaseFunctions.getInstance().temp_user;
-        System.out.println(temp);
         name = (EditText) v.findViewById(R.id.new_name);
         surname = (EditText) v.findViewById(R.id.new_surname);
         username = (EditText) v.findViewById(R.id.new_username);
@@ -109,7 +107,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         temp.surname = surname.getText().toString();
         temp.username = username.getText().toString();
 
-        FirebaseFunctions.getInstance().postUserDirect(temp);
+        FirebaseFunctions.getInstance().postUserDirect(temp, FirebaseAuth.getInstance().getCurrentUser().getUid());
         getActivity().onBackPressed();
 
     }

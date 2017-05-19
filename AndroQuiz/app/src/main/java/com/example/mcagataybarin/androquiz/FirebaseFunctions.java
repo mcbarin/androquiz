@@ -30,7 +30,7 @@ public class FirebaseFunctions {
     protected String user_id;
     protected String user_pp_url = "";
     private static final FirebaseFunctions ourInstance = new FirebaseFunctions();
-    public User temp_user;
+    public UserID temp_user;
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
 
@@ -82,7 +82,8 @@ public class FirebaseFunctions {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        temp_user = dataSnapshot.getValue(User.class);
+                        User tmp = dataSnapshot.getValue(User.class);
+                        temp_user = new UserID(user_id,tmp);
                     }
                     onLoaded.run();
                 }
@@ -103,7 +104,8 @@ public class FirebaseFunctions {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    temp_user = dataSnapshot.getValue(User.class);
+                    User tmp = dataSnapshot.getValue(User.class);
+                    temp_user = new UserID(user_id,tmp);
                 }
             }
             @Override
@@ -132,6 +134,9 @@ public class FirebaseFunctions {
                             all_users = new ArrayList<UserID>();
                         }
                         all_users.add(temp);
+                        if(temp.id.equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                            FirebaseFunctions.getInstance().temp_user = temp;
+                        }
                     }
                     if(all_users2== null) all_users2 = new ArrayList<UserID>();
                     for(int i =0;i<all_users.size();i++){
@@ -161,9 +166,9 @@ public class FirebaseFunctions {
         }
     }
 
-    public void postUserDirect(User temp) {
+    public void postUserDirect(User temp, String id) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(getCurrentUserId()).setValue(temp);
+        mDatabase.child("users").child(id).setValue(temp);
     }
 
 }

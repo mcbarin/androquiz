@@ -105,6 +105,12 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         };
         drawerLayout.setDrawerListener(drawerToggle);
 
+        FirebaseFunctions.getInstance().retrieveUsers(new Runnable() {
+            public void run() {
+
+            }
+        });
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -182,7 +188,11 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                     frag2 = new FriendsFragment();
                     FirebaseFunctions.getInstance().all_users = new ArrayList<FirebaseFunctions.UserID>();
                     for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
-                        frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                        //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                        if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)){
+                            frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                            System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
+                        }
                     }
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, frag2);
@@ -199,7 +209,11 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                             frag2 = new FriendsFragment();
                             ArrayList<FirebaseFunctions.UserID> a = FirebaseFunctions.getInstance().all_users;
                             for(int i = 0; i< a.size();i ++){
-                                frag2.requests.add(a.get(i));
+                                //frag2.requests.add(a.get(i));
+                                if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(a.get(i))){
+                                    frag2.requests.add(a.get(i));
+                                }
+
                             }
 
 
