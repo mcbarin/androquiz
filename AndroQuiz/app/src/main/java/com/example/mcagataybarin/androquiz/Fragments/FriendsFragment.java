@@ -176,8 +176,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
             mainViewholder = (ViewHolder) convertView.getTag();
 
-            mainViewholder.button2.setVisibility(View.INVISIBLE);
-            mainViewholder.button.setText("Challenge");
+
+            mainViewholder.button.setText("Challenge - Quiz");
+            mainViewholder.button2.setText("Challenge - Memo");
+
             if (aradi) {
                 mainViewholder.button.setText("Add Friend");
             }
@@ -236,14 +238,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     v.startAnimation(shake);
                     User temp = getItem(position).user;
                     String user_id = getItem(position).id;
-                    temp.requests.remove(user_id);
+
+
+                    // Memo Game başlat
 
                     requests.remove(position);
                     my_list.clear();
                     my_list.notifyDataSetChanged();
 
 
-                    if (!hasNotif) notif.setVisibility(View.VISIBLE);
+
 
                 }
             });

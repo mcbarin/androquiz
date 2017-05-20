@@ -162,9 +162,6 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 break;
             case 1:
 
-                final DialogFragment newFragment6 = new LoadFragment();
-                newFragment6.show(getFragmentManager(), "loader");
-
                 fragment2[0] = MemoGameFragment.newInstance(1);
                 MemoData.getInstance().initialize();
                 final android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -179,10 +176,10 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                     @Override
                     public void run() {
                         //fragment2.isLarge = true;
-                        newFragment6.dismiss();
+                        if(FirebaseFunctions.getInstance().rara != null) FirebaseFunctions.getInstance().rara.setVisibility(View.GONE);
 
                     }
-                }, 5000);
+                }, 6500);
 
 
                 break;

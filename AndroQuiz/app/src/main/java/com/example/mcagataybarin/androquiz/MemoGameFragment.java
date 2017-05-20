@@ -110,6 +110,10 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
             target_flags.addView(image, layoutParams);
         }
 
+        com.wang.avi.AVLoadingIndicatorView a = (com.wang.avi.AVLoadingIndicatorView) view.findViewById(R.id.loader2);
+        FirebaseFunctions.getInstance().rara = a;
+
+
         // For setting up the life images programmatically <3 <3 <3
         heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
         final int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
@@ -349,7 +353,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 }
                 gridView.setEnabled(true);
             }
-        }, 10000);
+        }, 11500);
 
     }
 

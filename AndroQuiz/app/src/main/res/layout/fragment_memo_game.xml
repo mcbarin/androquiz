@@ -2,14 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     tools:context="com.example.mcagataybarin.androquiz.MemoGameFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/loader2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blueishPurple"
+            style="@style/AVLoadingIndicatorView"
+            />
+
         <TextView
             android:id="@+id/memo_score"
+            android:layout_below="@+id/loader2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"

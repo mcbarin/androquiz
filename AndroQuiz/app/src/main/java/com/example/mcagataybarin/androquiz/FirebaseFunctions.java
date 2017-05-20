@@ -44,6 +44,7 @@ public class FirebaseFunctions {
     public gsID curgs;
     public int level = 70;
     public DialogFragment df;
+    public com.wang.avi.AVLoadingIndicatorView rara;
 
     public ArrayList<gsID> all_challenges, all_challenges2;
     public ArrayList<UserID> all_users, all_users2;
