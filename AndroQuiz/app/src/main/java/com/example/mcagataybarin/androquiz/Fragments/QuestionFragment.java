@@ -16,10 +16,13 @@ import android.widget.TextView;
 import com.example.mcagataybarin.androquiz.DrawerActivity;
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.Models.Category;
+import com.example.mcagataybarin.androquiz.Models.GameState;
 import com.example.mcagataybarin.androquiz.Models.Question;
 import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.QuestionData;
 import com.example.mcagataybarin.androquiz.R;
+
+import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -37,6 +40,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     public boolean isLarge;
     private int seconds = 10;
     private boolean running, wasRunning;
+    private int level;
     View v;
     private CategoryFragment cfrag;
 
@@ -54,7 +58,19 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         v = getView();
         Category c = null;
         if(categoryNumber == 10){
-            c = QuestionData.getInstance().getCategories()[0];
+
+            if(FirebaseFunctions.getInstance().challenged){
+                FirebaseFunctions.gsID gsID = FirebaseFunctions.getInstance().curgs;
+                FirebaseFunctions.getInstance().level = gsID.gs.gameLevel;
+            }else {
+                Random rand = new Random();
+                level = rand.nextInt(3);
+                if(FirebaseFunctions.getInstance().level == 70){
+                    FirebaseFunctions.getInstance().level = level;
+                }
+            }
+
+            c = QuestionData.getInstance().getCategories()[FirebaseFunctions.getInstance().level];
         }else{
             c = QuestionData.getInstance().getCategories()[categoryNumber];
         }
@@ -144,7 +160,23 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
             if(FirebaseFunctions.getInstance().quNum == 4){
                 System.out.println("SCORE : SCORE : " + QuestionData.getInstance().getPoint());
                 FirebaseFunctions.getInstance().quNum = 0;
-
+                FirebaseFunctions.gsID gsID;
+                if(FirebaseFunctions.getInstance().challenged){
+                    gsID = FirebaseFunctions.getInstance().curgs;
+                    gsID.gs.score2 = QuestionData.getInstance().getPoint();
+                    gsID.gs.completed = true;
+                    FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
+                }else {
+                    GameState gs = new GameState();
+                    // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
+                    gs.gameType = 0;
+                    gs.gameLevel = FirebaseFunctions.getInstance().level;
+                    gs.creator = FirebaseFunctions.getInstance().temp_user.id;
+                    gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
+                    gs.score1 = QuestionData.getInstance().getPoint();
+                    FirebaseFunctions.getInstance().postGameState(gs);
+                }
+                FirebaseFunctions.getInstance().level = 70;
                 intent = new Intent(getActivity(), DrawerActivity.class);
                 startActivity(intent);
 

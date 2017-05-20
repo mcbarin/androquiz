@@ -1,6 +1,8 @@
 package com.example.mcagataybarin.androquiz.Fragments;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
+import com.example.mcagataybarin.androquiz.LoadFragment;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.R;
@@ -35,7 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 public class FriendsFragment extends Fragment implements View.OnClickListener {
 
@@ -82,9 +84,13 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             temp.user.name.toLowerCase().contains(query.toLowerCase())) {
                         //Matched
                         System.out.println("şuanki uzer match: " + temp.user);
-                        if (!(temp.id.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id))
-                                && !FirebaseFunctions.getInstance().temp_user.user.friends.contains(temp.id))
+                        if (!(temp.id.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)))
                             requests.add(temp);
+                        if(FirebaseFunctions.getInstance().temp_user.user.friends != null) {
+                            if (FirebaseFunctions.getInstance().temp_user.user.friends.contains(temp.id)){
+                                requests.remove(temp);
+                            }
+                        }
                         my_list.notifyDataSetChanged();
 
                     } else {
@@ -115,6 +121,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
         Button anan = (Button) view.findViewById(R.id.friendreq);
         anan.setOnClickListener(this);
+
+
+        Button anan2 = (Button) view.findViewById(R.id.challenge);
+        anan2.setOnClickListener(this);
 
         ListView lv = (ListView) view.findViewById(R.id.listview);
 
@@ -189,8 +199,9 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                             temp.requests = new ArrayList<String>();
                         }
 
-                        temp.requests.add(user_id);
+                        temp.requests.add(FirebaseFunctions.getInstance().temp_user.id);
                         FirebaseFunctions.getInstance().postUserDirect(temp, user_id);
+
                     } else if (requestSayf) {
 
                         if (FirebaseFunctions.getInstance().temp_user.user.friends == null) {
@@ -199,6 +210,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                         FirebaseFunctions.getInstance().temp_user.user.friends.add(user_id);
                         FirebaseFunctions.getInstance().temp_user.user.requests.remove(user_id);
+                        temp.friends.add(FirebaseFunctions.getInstance().temp_user.id);
+                        FirebaseFunctions.getInstance().postUserDirect(temp,user_id);
                         requests.remove(position);
                         FirebaseFunctions.getInstance().postUserDirect(FirebaseFunctions.getInstance().temp_user.user, FirebaseFunctions.getInstance().temp_user.id);
                         my_list.notifyDataSetChanged();
@@ -206,7 +219,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                         Intent intent = new Intent();
                         intent = new Intent(getActivity(), QuestionActivity.class);
-
+                        FirebaseFunctions.getInstance().cur_opponent = user_id;
                         intent.putExtra("category", 10);
                         intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
                         startActivity(intent);
@@ -295,7 +308,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); // For fullscreen activity.
         setHasOptionsMenu(true);
         FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications");
-
+        FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications2");
 
     }
 
@@ -322,6 +335,34 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             }
             requestSayf = true;
             my_list.notifyDataSetChanged();
+        }else if (v.getId() == R.id.challenge){
+
+
+            final DialogFragment newFragment2 = new LoadFragment();
+            newFragment2.show(getFragmentManager(), "loader");
+            FirebaseFunctions.getInstance().retrieveChallenges(new Runnable() {
+                public void run() {
+                    ChallengeFragment frag2 = new ChallengeFragment();
+                    for(int i = 0; i < FirebaseFunctions.getInstance().all_challenges2.size();i++){
+                        if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
+                            frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));
+                        }
+                        if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.creator.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
+                            frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));
+                        }
+
+                    }
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, frag2);
+                    ft.addToBackStack(null);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.commit();
+                    newFragment2.dismiss();
+
+                }
+            });
+
+
         }
 
     }

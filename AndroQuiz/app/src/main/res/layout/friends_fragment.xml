@@ -13,6 +13,14 @@
         android:id="@+id/friendreq"
         />
 
+    <Button
+        android:layout_width="172dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="See Challenges"
+        android:id="@+id/challenge"
+        />
+
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"

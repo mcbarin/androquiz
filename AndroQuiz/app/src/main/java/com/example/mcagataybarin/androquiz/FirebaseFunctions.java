@@ -3,6 +3,7 @@ package com.example.mcagataybarin.androquiz;
 import android.util.Log;
 import android.view.View;
 
+import com.example.mcagataybarin.androquiz.Models.GameState;
 import com.example.mcagataybarin.androquiz.Models.Question;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +37,12 @@ public class FirebaseFunctions {
     private TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
     private Task dbTask = dbSource.getTask();
     public int quNum = 0;
+    public String cur_opponent;
+    public boolean challenged = false;
+    public gsID curgs;
+    public int level = 70;
 
+    public ArrayList<gsID> all_challenges, all_challenges2;
     public ArrayList<UserID> all_users, all_users2;
     public ArrayList<Question> temp_questions = new ArrayList<>();
 
@@ -142,11 +148,14 @@ public class FirebaseFunctions {
                             FirebaseFunctions.getInstance().temp_user = temp;
                         }
                     }
-                    if(all_users2== null) all_users2 = new ArrayList<UserID>();
-                    for(int i =0;i<all_users.size();i++){
-                        all_users2.add(all_users.get(i));
+
+                    if(all_users2== null) {
+                        all_users2 = new ArrayList<UserID>();
+                        for (int i = 0; i < all_users.size(); i++) {
+                            all_users2.add(all_users.get(i));
+                        }
+                        all_users2 = new ArrayList<>(new LinkedHashSet<>(all_users2));
                     }
-                    all_users2 = new ArrayList<>(new LinkedHashSet<>(all_users2));
                     onLoaded.run();
                 }
             }
@@ -157,6 +166,44 @@ public class FirebaseFunctions {
         });
 
     }
+
+    public void retrieveChallenges(final Runnable onLoaded) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("gamestate");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        String id = issue.getKey();
+                        GameState event = issue.getValue(GameState.class);
+                        if(all_challenges == null) all_challenges = new ArrayList<gsID>();
+                        all_challenges.add(new gsID(id,event));
+//
+                    }
+
+                    if(all_challenges2== null) {
+                        all_challenges2 = new ArrayList<>();
+                        for (int i = 0; i < all_challenges.size(); i++) {
+                            all_challenges2.add(all_challenges.get(i));
+                        }
+                        all_challenges2 = new ArrayList<>(new LinkedHashSet<>(all_challenges2));
+                    }
+
+                    onLoaded.run();
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
 
     public void getCategoryQuestions(final Runnable onLoaded){
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -197,9 +244,31 @@ public class FirebaseFunctions {
         }
     }
 
+    public static class gsID{
+
+        public String id;
+        public GameState gs;
+
+        public gsID(String id, GameState gs){
+            this.id = id;
+            this.gs = gs;
+
+        }
+    }
+
     public void postUserDirect(User temp, String id) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(id).setValue(temp);
+    }
+
+    public void postGameState(GameState gs){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("gamestate").push().setValue(gs);
+    }
+
+    public void postGameStateDirect(String id, GameState gs){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("gamestate").child(id).setValue(gs);
     }
 
 }

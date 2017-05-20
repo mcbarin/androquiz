@@ -189,11 +189,14 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                     frag2 = new FriendsFragment();
                     FirebaseFunctions.getInstance().all_users = new ArrayList<FirebaseFunctions.UserID>();
                     System.out.println("Size : " + FirebaseFunctions.getInstance().all_users2.size());
+                    FirebaseFunctions.getInstance().all_users2 = new ArrayList<>(new LinkedHashSet<>(FirebaseFunctions.getInstance().all_users2));
                     for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
                         //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                        if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)){
-                            frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                            System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
+                        if(FirebaseFunctions.getInstance().temp_user.user.friends != null) {
+                            if (FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)) {
+                                frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                                System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
+                            }
                         }
                     }
 
@@ -211,11 +214,20 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                         public void run() {
 
                             frag2 = new FriendsFragment();
+                            FirebaseFunctions.getInstance().all_users2 = new ArrayList<>(new LinkedHashSet<>(FirebaseFunctions.getInstance().all_users2));
+
+                            System.out.println("Size : " + FirebaseFunctions.getInstance().all_users2.size());
+
                             for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
                                 //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                                if(FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)){
-                                    frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                                    System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
+                                if(FirebaseFunctions.getInstance().temp_user.user.friends != null) {
+                                    if (FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)) {
+
+                                        if (!frag2.requests.contains(FirebaseFunctions.getInstance().all_users2.get(i))) {
+                                            frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
+                                            System.out.println("EKLIOM AHU 2 " + FirebaseFunctions.getInstance().all_users2.get(i).user);
+                                        }
+                                    }
                                 }
                             }
 
