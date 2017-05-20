@@ -27,7 +27,7 @@
         android:layout_toEndOf="@+id/list_item_thumbnail" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="Confirm"
         android:background="@drawable/button"
@@ -38,7 +38,7 @@
         />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="40dp"
         android:text="Ignore"
         android:background="@drawable/button"

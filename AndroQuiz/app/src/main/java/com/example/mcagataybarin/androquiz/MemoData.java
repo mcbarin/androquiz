@@ -13,7 +13,7 @@ import java.util.Random;
  * Created by mcagataybarin on 3/26/17.
  */
 
-class MemoData {
+public class MemoData {
     private User currentUser;
     public Score score;
     public LifePoint lifePoint;
@@ -24,7 +24,7 @@ class MemoData {
 
     private static final MemoData ourInstance = new MemoData();
 
-    static MemoData getInstance() {
+    public static MemoData getInstance() {
         return ourInstance;
     }
 

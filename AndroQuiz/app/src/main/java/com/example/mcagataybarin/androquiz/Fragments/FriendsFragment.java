@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.LoadFragment;
+import com.example.mcagataybarin.androquiz.MemoData;
+import com.example.mcagataybarin.androquiz.MemoGameActivity;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.R;
@@ -177,8 +179,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             mainViewholder = (ViewHolder) convertView.getTag();
 
 
-            mainViewholder.button.setText("Challenge - Quiz");
-            mainViewholder.button2.setText("Challenge - Memo");
+            mainViewholder.button.setText("Chal - Quiz");
+            mainViewholder.button2.setText("Chal - Memo");
 
             if (aradi) {
                 mainViewholder.button.setText("Add Friend");
@@ -212,6 +214,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                         FirebaseFunctions.getInstance().temp_user.user.friends.add(user_id);
                         FirebaseFunctions.getInstance().temp_user.user.requests.remove(user_id);
+                        if(temp.friends == null) temp.friends = new ArrayList<String>();
                         temp.friends.add(FirebaseFunctions.getInstance().temp_user.id);
                         FirebaseFunctions.getInstance().postUserDirect(temp,user_id);
                         requests.remove(position);
@@ -242,11 +245,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
 
                     // Memo Game başlat
 
-                    requests.remove(position);
-                    my_list.clear();
-                    my_list.notifyDataSetChanged();
-
-
+                    MemoData.getInstance().initialize();
+                    FirebaseFunctions.getInstance().cur_opponent = user_id;
+                    Intent intent = new Intent(getActivity(), MemoGameActivity.class);
+                    startActivity(intent);
 
 
                 }
@@ -348,6 +350,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 public void run() {
                     ChallengeFragment frag2 = new ChallengeFragment();
                     for(int i = 0; i < FirebaseFunctions.getInstance().all_challenges2.size();i++){
+                        System.out.println(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent + " " + FirebaseFunctions.getInstance().temp_user.id);
                         if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
                             frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));
                         }

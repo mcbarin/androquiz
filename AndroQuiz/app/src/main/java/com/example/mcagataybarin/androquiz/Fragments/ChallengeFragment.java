@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
+import com.example.mcagataybarin.androquiz.MemoData;
+import com.example.mcagataybarin.androquiz.MemoGameActivity;
 import com.example.mcagataybarin.androquiz.Models.GameState;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.example.mcagataybarin.androquiz.QuestionActivity;
@@ -181,11 +183,18 @@ public class ChallengeFragment extends Fragment {
                     v.startAnimation(shake);
 
                     FirebaseFunctions.getInstance().curgs = getItem(position);
-                    Intent intent = new Intent();
-                    intent = new Intent(getActivity(), QuestionActivity.class);
-                    intent.putExtra("category", 10);
-                    intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
-                    startActivity(intent);
+
+                    if(FirebaseFunctions.getInstance().curgs.gs.gameType == 0) {
+                        Intent intent = new Intent();
+                        intent = new Intent(getActivity(), QuestionActivity.class);
+                        intent.putExtra("category", 10);
+                        intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
+                        startActivity(intent);
+                    }else{
+                        MemoData.getInstance().initialize();
+                        Intent intent = new Intent(getActivity(), MemoGameActivity.class);
+                        startActivity(intent);
+                    }
 
                 }
             });

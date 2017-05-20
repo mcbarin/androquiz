@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.mcagataybarin.androquiz.Models.GameState;
+import com.example.mcagataybarin.androquiz.Models.HighScore;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -166,6 +168,26 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         // Check if game is ended with success or not.
                         remainingTargetFlags -= 1;
                         if (remainingTargetFlags == 0){
+
+                            FirebaseFunctions.gsID gsID;
+                            if(FirebaseFunctions.getInstance().challenged){
+                                gsID = FirebaseFunctions.getInstance().curgs;
+                                gsID.gs.score2 = MemoData.getInstance().score.getScore();
+                                gsID.gs.completed = true;
+                                FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
+                                FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
+                            }else {
+                                GameState gs = new GameState();
+                                // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
+                                gs.gameType = 1;
+                                gs.gameLevel = FirebaseFunctions.getInstance().level;
+                                gs.creator = FirebaseFunctions.getInstance().temp_user.id;
+                                gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
+                                gs.score1 = MemoData.getInstance().score.getScore();
+                                FirebaseFunctions.getInstance().postGameState(gs);
+                                FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
+                            }
+
                             // Game ended, go to next level. If this is the last level, show game score.
                             View fragmentContainer = getView().findViewById(R.id.fragment_container);
 
@@ -384,6 +406,31 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
         boolean isFailed = MemoData.getInstance().lifePoint.isFailed();
         if (isFailed) {
+
+            FirebaseFunctions.gsID gsID;
+            if(FirebaseFunctions.getInstance().challenged){
+                gsID = FirebaseFunctions.getInstance().curgs;
+                gsID.gs.score2 = MemoData.getInstance().score.getScore();
+                gsID.gs.completed = true;
+                FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
+                FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
+                Intent intent = new Intent();
+                intent = new Intent(getActivity(), DrawerActivity.class);
+                startActivity(intent);
+            }else {
+                GameState gs = new GameState();
+                // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
+                gs.gameType = 1;
+                gs.gameLevel = FirebaseFunctions.getInstance().level;
+                gs.creator = FirebaseFunctions.getInstance().temp_user.id;
+                gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
+                gs.score1 = MemoData.getInstance().score.getScore();
+                FirebaseFunctions.getInstance().postGameState(gs);
+                FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
+                Intent intent = new Intent();
+                intent = new Intent(getActivity(), DrawerActivity.class);
+                startActivity(intent);
+            }
             // GAME OVER;
             gridView.setEnabled(false); // Disable the gridView.
 
