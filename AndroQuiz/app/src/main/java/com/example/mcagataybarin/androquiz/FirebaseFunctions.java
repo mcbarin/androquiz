@@ -50,6 +50,7 @@ public class FirebaseFunctions {
     public ArrayList<UserID> all_users, all_users2;
     public ArrayList<HighScore> all_scores, all_scores2;
     public ArrayList<Question> temp_questions = new ArrayList<>();
+    public boolean memochal = false;
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;

@@ -414,9 +414,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 gsID.gs.completed = true;
                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
-                Intent intent = new Intent();
-                intent = new Intent(getActivity(), DrawerActivity.class);
-                startActivity(intent);
+                
             }else {
                 GameState gs = new GameState();
                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
@@ -427,27 +425,33 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 gs.score1 = MemoData.getInstance().score.getScore();
                 FirebaseFunctions.getInstance().postGameState(gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
-                Intent intent = new Intent();
-                intent = new Intent(getActivity(), DrawerActivity.class);
-                startActivity(intent);
+
             }
             // GAME OVER;
             gridView.setEnabled(false); // Disable the gridView.
 
-            // Show score page.
-            View fragmentContainer = getActivity().findViewById(R.id.fragment_container);
-            EndGameFragment fragment = EndGameFragment.newInstance("memo");
 
-            if (fragmentContainer != null) { //  Tablet
-                Log.i("LIFE", "TABLET");
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.replace(R.id.fragment_container, fragment).commit();
-            } else { // Phone
-                Log.i("LIFE", "PHONE");
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.replace(R.id.memo_fragment, fragment).commit();
+            if(FirebaseFunctions.getInstance().memochal){
+                Intent intent = new Intent();
+                intent = new Intent(getActivity(), DrawerActivity.class);
+                startActivity(intent);
+
+            }else {
+                // Show score page.
+                View fragmentContainer = getActivity().findViewById(R.id.fragment_container);
+                EndGameFragment fragment = EndGameFragment.newInstance("memo");
+
+                if (fragmentContainer != null) { //  Tablet
+                    Log.i("LIFE", "TABLET");
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    transaction.replace(R.id.fragment_container, fragment).commit();
+                } else { // Phone
+                    Log.i("LIFE", "PHONE");
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    transaction.replace(R.id.memo_fragment, fragment).commit();
+                }
             }
 
         } else {
