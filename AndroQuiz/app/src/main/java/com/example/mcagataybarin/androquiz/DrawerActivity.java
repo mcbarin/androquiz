@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,11 +26,13 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.ShareActionProvider;
 
+import com.example.mcagataybarin.androquiz.Fragments.BlankFragment;
 import com.example.mcagataybarin.androquiz.Fragments.CategoryFragment;
 import com.example.mcagataybarin.androquiz.Fragments.EditProfileFragment;
 import com.example.mcagataybarin.androquiz.Fragments.FriendsFragment;
 import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
 import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
+import com.example.mcagataybarin.androquiz.Fragments.RankingFragment;
 import com.example.mcagataybarin.androquiz.Models.Category;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +45,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
     private boolean friendsFragment = false;
     private FriendsFragment frag2;
+    private RankingFragment frag3;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -128,71 +132,95 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     private void selectItem(int position) {
         // update the main content by replacing fragments
         currentPosition = position;
-        CategoryFragment fragment3 = null;
-        MemoGameFragment fragment2 = null;
+        BlankFragment fragment4 = null;
+        final CategoryFragment[] fragment3 = {null};
+        final MemoGameFragment[] fragment2 = {null};
         FriendsFragment frag = null;
 
 
         final Fragment[] fragment = new Fragment[1];
         friendsFragment = false;
         switch (position) {
-            case 1:
-                fragment2 = MemoGameFragment.newInstance(1);
-                MemoData.getInstance().initialize();
-                //fragment2.isLarge = true;
+            case 0:
+                final DialogFragment newFragment = new LoadFragment();
+                newFragment.show(getFragmentManager(), "loader");
+                FirebaseFunctions.getInstance().getCategoryQuestions(new Runnable() {
+                    @Override
+                    public void run() {
+                        QuestionData.getInstance().initialize(); // initialize game.
+                        fragment3[0] = new CategoryFragment();
+                        FragmentTransaction ft3 = getFragmentManager().beginTransaction();
+                        ft3.replace(R.id.content_frame, fragment3[0]);
+                        ft3.addToBackStack(null);
+                        ft3.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        ft3.commit();
+                        newFragment.dismiss();
+                    }
+                });
 
-                android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                break;
+            case 1:
+
+                final DialogFragment newFragment6 = new LoadFragment();
+                newFragment6.show(getFragmentManager(), "loader");
+
+                fragment2[0] = MemoGameFragment.newInstance(1);
+                MemoData.getInstance().initialize();
+                final android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 getFragmentManager().popBackStack(null, getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
-                transaction.replace(R.id.content_frame, fragment2);
+                transaction.replace(R.id.content_frame, fragment2[0]);
                 transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.commit();
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //fragment2.isLarge = true;
+                        newFragment6.dismiss();
+
+                    }
+                }, 5000);
+
+
                 break;
             case 2:
 
-                final DialogFragment newFragment = new LoadFragment();
-                newFragment.show(getFragmentManager(), "loader");
+                final DialogFragment newFragment55 = new LoadFragment();
+                newFragment55.show(getFragmentManager(), "loader");
 
-                if (FirebaseFunctions.getInstance().temp_user != null) {
-                    fragment[0] = new EditProfileFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment[0]);
-                    ft.addToBackStack(null);
+                FirebaseFunctions.getInstance().getUserById(new Runnable() {
+                    public void run() {
+                        fragment[0] = new EditProfileFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment[0]);
+                        ft.addToBackStack(null);
 
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    newFragment.dismiss();
-                    ft.commit();
-                } else {
-                    FirebaseFunctions.getInstance().getUserById(new Runnable() {
-                        public void run() {
-                            fragment[0] = new EditProfileFragment();
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.replace(R.id.content_frame, fragment[0]);
-                            ft.addToBackStack(null);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        newFragment55.dismiss();
+                        ft.commit();
 
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                            newFragment.dismiss();
-                            ft.commit();
+                    }
+                }, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                        }
-                    }, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                }
                 break;
             case 3:
 
                 final DialogFragment newFragment2 = new LoadFragment();
                 newFragment2.show(getFragmentManager(), "loader");
-                friendsFragment=true;
-                if(FirebaseFunctions.getInstance().all_users != null){
-                    System.out.println("şuan null değil ve burdayım ve size : " + FirebaseFunctions.getInstance().all_users2.size() );
+                friendsFragment = true;
+                if (FirebaseFunctions.getInstance().all_users != null) {
+                    System.out.println("şuan null değil ve burdayım ve size : " + FirebaseFunctions.getInstance().all_users2.size());
 
                     frag2 = new FriendsFragment();
                     FirebaseFunctions.getInstance().all_users = new ArrayList<FirebaseFunctions.UserID>();
                     System.out.println("Size : " + FirebaseFunctions.getInstance().all_users2.size());
                     FirebaseFunctions.getInstance().all_users2 = new ArrayList<>(new LinkedHashSet<>(FirebaseFunctions.getInstance().all_users2));
-                    for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
+                    for (int i = 0; i < FirebaseFunctions.getInstance().all_users2.size(); i++) {
                         //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                        if(FirebaseFunctions.getInstance().temp_user.user.friends != null) {
+                        if (FirebaseFunctions.getInstance().temp_user.user.friends != null) {
                             if (FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)) {
                                 frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
                                 System.out.println("EKLIOM AHU " + FirebaseFunctions.getInstance().all_users2.get(i).user);
@@ -208,7 +236,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                     newFragment2.dismiss();
                     ft.commit();
 
-                }else{
+                } else {
 
                     FirebaseFunctions.getInstance().retrieveUsers(new Runnable() {
                         public void run() {
@@ -218,9 +246,9 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
 
                             System.out.println("Size : " + FirebaseFunctions.getInstance().all_users2.size());
 
-                            for(int i =0;i<FirebaseFunctions.getInstance().all_users2.size();i++){
+                            for (int i = 0; i < FirebaseFunctions.getInstance().all_users2.size(); i++) {
                                 //frag2.requests.add(FirebaseFunctions.getInstance().all_users2.get(i));
-                                if(FirebaseFunctions.getInstance().temp_user.user.friends != null) {
+                                if (FirebaseFunctions.getInstance().temp_user.user.friends != null) {
                                     if (FirebaseFunctions.getInstance().temp_user.user.friends.contains(FirebaseFunctions.getInstance().all_users2.get(i).id)) {
 
                                         if (!frag2.requests.contains(FirebaseFunctions.getInstance().all_users2.get(i))) {
@@ -246,15 +274,32 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                 break;
             //friends
             case 4:
-                //rankings
+                final DialogFragment newFragment3 = new LoadFragment();
+                newFragment3.show(getFragmentManager(), "loader");
+                FirebaseFunctions.getInstance().getScores(new Runnable() {
+                    public void run() {
+                        frag3 = new RankingFragment();
+                        if (frag3.my_list != null) frag3.my_list.clear();
+                        for (int i = 0; i < FirebaseFunctions.getInstance().all_scores2.size(); i++) {
+                            frag3.requests.add(FirebaseFunctions.getInstance().all_scores2.get(i));
+                        }
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, frag3);
+                        ft.addToBackStack(null);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        ft.commit();
+
+                        newFragment3.dismiss();
+                    }
+                });
+                break;
             default:
-                QuestionData.getInstance().initialize(); // initialize game.
-                fragment3 = new CategoryFragment();
-                FragmentTransaction ft3 = getFragmentManager().beginTransaction();
-                ft3.replace(R.id.content_frame, fragment3);
-                ft3.addToBackStack(null);
-                ft3.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft3.commit();
+                fragment4 = new BlankFragment();
+                FragmentTransaction ft4 = getFragmentManager().beginTransaction();
+                ft4.replace(R.id.content_frame, fragment4);
+                ft4.addToBackStack(null);
+                ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft4.commit();
                 //fragment3.isLarge = true;
         }
 
@@ -275,7 +320,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         friendsFragment = false;
         invalidateOptionsMenu();
         super.onBackPressed();

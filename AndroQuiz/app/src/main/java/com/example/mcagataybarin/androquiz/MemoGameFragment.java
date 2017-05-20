@@ -349,7 +349,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 }
                 gridView.setEnabled(true);
             }
-        }, 5000);
+        }, 10000);
 
     }
 

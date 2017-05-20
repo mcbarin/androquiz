@@ -1,6 +1,5 @@
 package com.example.mcagataybarin.androquiz.Fragments;
 
-import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -91,9 +90,6 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
         questionButtons[12] = c3q3;questionButtons[13] = c3q4;questionButtons[14] = c3q5;
 
         updateInfo();
-
-        final DialogFragment newFragment = new LoadFragment();
-        newFragment.show(getFragmentManager(), "loader");
 
 
     }

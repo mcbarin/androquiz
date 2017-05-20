@@ -1,9 +1,11 @@
 package com.example.mcagataybarin.androquiz;
 
+import android.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 
 import com.example.mcagataybarin.androquiz.Models.GameState;
+import com.example.mcagataybarin.androquiz.Models.HighScore;
 import com.example.mcagataybarin.androquiz.Models.Question;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.android.gms.tasks.Task;
@@ -41,9 +43,11 @@ public class FirebaseFunctions {
     public boolean challenged = false;
     public gsID curgs;
     public int level = 70;
+    public DialogFragment df;
 
     public ArrayList<gsID> all_challenges, all_challenges2;
     public ArrayList<UserID> all_users, all_users2;
+    public ArrayList<HighScore> all_scores, all_scores2;
     public ArrayList<Question> temp_questions = new ArrayList<>();
 
     public static FirebaseFunctions getInstance() {
@@ -205,6 +209,44 @@ public class FirebaseFunctions {
     }
 
 
+    public void getScores(final Runnable onLoaded) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Query query = mDatabase.child("highscore");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+
+                        HighScore event = issue.getValue(HighScore.class);
+                        if(all_scores == null) all_scores = new ArrayList<HighScore>();
+                        all_scores.add(event);
+//
+                    }
+
+                    if(all_scores2== null) {
+                        all_scores2 = new ArrayList<>();
+                        for (int i = 0; i < all_scores.size(); i++) {
+                            all_scores2.add(all_scores.get(i));
+                        }
+                        all_scores2 = new ArrayList<>(new LinkedHashSet<>(all_scores2));
+                    }
+
+                    onLoaded.run();
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+
     public void getCategoryQuestions(final Runnable onLoaded){
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final Query query = mDatabase.child("quiz");
@@ -230,6 +272,8 @@ public class FirebaseFunctions {
             }
         });
     }
+
+
 
 
     public static class UserID{
@@ -269,6 +313,11 @@ public class FirebaseFunctions {
     public void postGameStateDirect(String id, GameState gs){
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("gamestate").child(id).setValue(gs);
+    }
+
+    public void postHighScore(HighScore hs){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("highscore").push().setValue(hs);
     }
 
 }
