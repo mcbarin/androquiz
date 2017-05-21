@@ -16,8 +16,12 @@ import java.util.ArrayList;
 public class Question {
     public String question;
     public ArrayList<String> choices = new ArrayList<>();
-    int answer, point, status=3;
+    public int answer, point, status=3;
     // 0-> false, 1-> true, 2-> no time, 3-> not opened
+
+    public Question(){
+
+    }
 
     public Question(DataSnapshot dataSnapshot){
         this.question = dataSnapshot.child("question").getValue().toString();

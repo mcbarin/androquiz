@@ -1,6 +1,9 @@
 package com.example.mcagataybarin.androquiz;
 
 import android.app.DialogFragment;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 
@@ -27,6 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class FirebaseFunctions {
     private DatabaseReference mDatabase;
@@ -52,6 +57,8 @@ public class FirebaseFunctions {
     public ArrayList<Question> temp_questions = new ArrayList<>();
     public boolean memochal = false;
     public int gamelevel;
+    public SQLiteDatabase myDB;
+    public boolean sqlVar = false;
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;
@@ -211,6 +218,97 @@ public class FirebaseFunctions {
 
     }
 
+    public ArrayList<Question> getAllQuestions(){
+
+        ArrayList<Question> arrayList = new ArrayList<Question>();
+
+        Cursor c = myDB.rawQuery("SELECT * from question",null);
+
+        //date, detail, director, duration, genre, image, title;
+
+        int date_index = c.getColumnIndex("question");
+        int detail_index = c.getColumnIndex("choice0");
+        int director_index = c.getColumnIndex("choice1");
+        int duration_index = c.getColumnIndex("choice2");
+        int genre_index = c.getColumnIndex("choice3");
+        int title_index = c.getColumnIndex("answer");
+        int image_index = c.getColumnIndex("point");
+
+        c.moveToFirst();
+        int a = 1;
+        int count = c.getCount();
+
+        if(count == 0){
+            return arrayList;
+        }
+
+        if(count == 1){
+            Question temp = new Question();
+            temp.question = c.getString(date_index);
+            if(temp.choices == null) temp.choices = new ArrayList<>();
+            temp.choices.add(c.getString(detail_index));
+            temp.choices.add(c.getString(director_index));
+            temp.choices.add(c.getString(duration_index));
+            temp.choices.add(c.getString(genre_index));
+            temp.answer = c.getInt(title_index);
+            temp.point = c.getInt(image_index);
+            arrayList.add(temp);
+
+        } else {
+            while (c != null) {
+                a++;
+                Question temp = new Question();
+                temp.question = c.getString(date_index);
+                if(temp.choices == null) temp.choices = new ArrayList<>();
+                temp.choices.add(c.getString(detail_index));
+                temp.choices.add(c.getString(director_index));
+                temp.choices.add(c.getString(duration_index));
+                temp.choices.add(c.getString(genre_index));
+                temp.answer = c.getInt(title_index);
+                temp.point = c.getInt(image_index);
+                arrayList.add(temp);
+                if (count != a) {
+                    c.moveToNext();
+                } else {
+                    c.moveToNext();
+                    Question temp2 = new Question();
+                    temp2.question = c.getString(date_index);
+                    if(temp.choices == null) temp.choices = new ArrayList<>();
+                    temp2.choices.add(c.getString(detail_index));
+                    temp2.choices.add(c.getString(director_index));
+                    temp2.choices.add(c.getString(duration_index));
+                    temp2.choices.add(c.getString(genre_index));
+                    temp2.answer = c.getInt(title_index);
+                    temp2.point = c.getInt(image_index);
+                    arrayList.add(temp2);
+                    break;
+                }
+
+            }
+        }
+
+        return arrayList;
+    }
+
+
+    public void addToDatabase(Question que) {
+        //Add to SQLite, to the movie table.
+
+        String question = que.question;
+        String choice0 = que.choices.get(0);
+        String choice1 = que.choices.get(1);
+        String choice2 = que.choices.get(2);
+        String choice3 = que.choices.get(3);
+        int answer = que.answer;
+        int point = que.point;
+        question = question.replaceAll("'", " ");
+        System.out.println(question);
+        myDB.execSQL("INSERT INTO question (question, choice0, choice1, choice2, choice3, answer, point) VALUES " +
+                "('" + question + "', '" + choice0 + "', '" + choice1 + "', '" +
+                choice2 + "', '" + choice3 + "', '" + answer + "', '" + point + "' )");
+        //End
+    }
+
 
     public void getScores(final Runnable onLoaded) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -263,6 +361,9 @@ public class FirebaseFunctions {
                         for (DataSnapshot questionData: issue.getChildren()) {
                             Question question = new Question(questionData);
                             temp_questions.add(question);
+                            if(!sqlVar) {
+                                addToDatabase(question);
+                            }
                         }
                     }
                     onLoaded.run();

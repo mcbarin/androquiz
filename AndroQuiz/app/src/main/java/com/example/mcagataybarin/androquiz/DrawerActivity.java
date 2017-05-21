@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import com.example.mcagataybarin.androquiz.Fragments.ListFragment;
 import com.example.mcagataybarin.androquiz.Fragments.QuestionFragment;
 import com.example.mcagataybarin.androquiz.Fragments.RankingFragment;
 import com.example.mcagataybarin.androquiz.Models.Category;
+import com.example.mcagataybarin.androquiz.Models.Question;
 import com.example.mcagataybarin.androquiz.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -46,6 +48,8 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     private boolean friendsFragment = false;
     private FriendsFragment frag2;
     private RankingFragment frag3;
+    private SQLiteDatabase myDB;
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -74,6 +78,23 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
         setContentView(R.layout.activity_drawer);
 
         System.out.println("INTERNET CONNECTION? ::   " + isNetworkAvailable());
+        myDB = this.openOrCreateDatabase("Gameos", MODE_PRIVATE, null);
+        myDB.execSQL("CREATE TABLE IF NOT EXISTS question (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "question TEXT not null, choice0 TEXT not null, choice1 TEXT not null, choice2 TEXT not null," +
+                "choice3 TEXT not null, answer INTEGER not null, point INTEGER not null )");
+        FirebaseFunctions.getInstance().myDB = myDB;
+
+
+        ArrayList<Question> rr = new ArrayList<>();
+
+        rr = FirebaseFunctions.getInstance().getAllQuestions();
+        if(rr.size() > 16){
+            FirebaseFunctions.getInstance().sqlVar = true;
+        }
+        for(int i = 0;i<15;i++){
+            Question tmp = rr.get(i);
+            System.out.println("SQLitedan movie: "+ tmp.question + " " + tmp.answer + " " + tmp.point);
+        }
 
         titles = getResources().getStringArray(R.array.titles);
         drawerList = (ListView) findViewById(R.id.drawer);
@@ -145,9 +166,22 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
             case 0:
                 final DialogFragment newFragment = new LoadFragment();
                 newFragment.show(getFragmentManager(), "loader");
+
                 FirebaseFunctions.getInstance().getCategoryQuestions(new Runnable() {
                     @Override
                     public void run() {
+
+                        ArrayList<Question> rr = new ArrayList<>();
+                        
+                        if(!isNetworkAvailable()){
+                            rr = FirebaseFunctions.getInstance().getAllQuestions();
+                            for(int i = 0;i<15;i++){
+                                Question tmp = rr.get(i);
+                                System.out.println("SQLitedan movie: "+ tmp.question + " " + tmp.answer + " " + tmp.point);
+                                FirebaseFunctions.getInstance().temp_questions.add(tmp);
+                            }
+                        }
+
                         QuestionData.getInstance().initialize(); // initialize game.
                         fragment3[0] = new CategoryFragment();
                         FragmentTransaction ft3 = getFragmentManager().beginTransaction();
