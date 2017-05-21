@@ -232,7 +232,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
                                     }
                                 } else {
                                     // Level 3. Game is successfully finished.
-
+                                    FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
                                     Intent intent = new Intent();
                                     intent = new Intent(getActivity(), DrawerActivity.class);
                                     startActivity(intent);

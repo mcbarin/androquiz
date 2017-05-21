@@ -15,7 +15,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.LoadFragment;
+import com.example.mcagataybarin.androquiz.Models.HighScore;
 import com.example.mcagataybarin.androquiz.QuestionActivity;
 import com.example.mcagataybarin.androquiz.QuestionData;
 import com.example.mcagataybarin.androquiz.QuizActivity2;
@@ -246,6 +248,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
                 if(QuestionData.getInstance().getNumAnsweredQuestions() == 15){
                     TextView finishText = (TextView) vieww.findViewById(R.id.finishText);
                     finishText.setText("Game finished. Your Point: " + ""+QuestionData.getInstance().getPoint());
+                    FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, QuestionData.getInstance().getPoint()));
                 }
             }
         }
