@@ -86,37 +86,51 @@ public class ChallengeFragment extends Fragment {
                 viewHolder.button = (Button) convertView.findViewById(R.id.list_item_btna);
                 viewHolder.button2 = (Button) convertView.findViewById(R.id.list_item_btn2a);
 
-                String text;
+                ArrayList<FirebaseFunctions.UserID> rr = (ArrayList<FirebaseFunctions.UserID>) FirebaseFunctions.getInstance().all_users2.clone();
+
+                String opponent = "";
+                String creator =  "";
+
+                for(int i = 0;i<rr.size();i++){
+                    FirebaseFunctions.UserID temp = rr.get(i);
+                    if(temp.id.equalsIgnoreCase(getItem(position).gs.opponent)){
+                        opponent = temp.user.name + " " + temp.user.surname;
+                    }
+                    if(temp.id.equalsIgnoreCase(getItem(position).gs.creator)){
+                        creator = temp.user.name + " " + temp.user.surname;
+                    }
+                }
+
 
                 if(getItem(position).gs.creator.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
-                    viewHolder.title.setText("You challenged " + getItem(position).gs.opponent);
+                    viewHolder.title.setText("You challenged " + opponent);
 
                     if(getItem(position).gs.completed){
                         String txt = "";
                         viewHolder.button.setVisibility(View.INVISIBLE);
                         if(getItem(position).gs.score1 > getItem(position).gs.score2){
                             txt = "YOU WON THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2 +
-                                    "against " + getItem(position).gs.opponent;
+                                    "against " + opponent;
                         }else{
                             txt = "YOU LOST THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2 +
-                                    "against " + getItem(position).gs.opponent;
+                                    "against " + opponent;
                         }
                         viewHolder.title.setText(txt);
                     }
 
 
                 }else if(getItem(position).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
-                    viewHolder.title.setText(getItem(position).gs.creator + "\n Challenged you");
+                    viewHolder.title.setText(creator + "\n Challenged you");
                     FirebaseFunctions.getInstance().challenged = true;
                     if(getItem(position).gs.completed){
                         String txt = "";
                         viewHolder.button.setVisibility(View.INVISIBLE);
                         if(getItem(position).gs.score1 > getItem(position).gs.score2){
                             txt = "YOU LOST THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2+
-                                    "against " + getItem(position).gs.creator;
+                                    "against " + creator;
                         }else{
                             txt = "YOU WON THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2 +
-                                    "against " + getItem(position).gs.creator;
+                                    "against " + creator;
                         }
                         viewHolder.title.setText(txt);
                     }
@@ -136,36 +150,51 @@ public class ChallengeFragment extends Fragment {
             mainViewholder.button2.setVisibility(View.INVISIBLE);
             mainViewholder.button.setText("Accept Challenge");
 
+            ArrayList<FirebaseFunctions.UserID> rr = (ArrayList<FirebaseFunctions.UserID>) FirebaseFunctions.getInstance().all_users2.clone();
+
+            String opponent = "";
+            String creator =  "";
+
+            for(int i = 0;i<rr.size();i++){
+                FirebaseFunctions.UserID temp = rr.get(i);
+                if(temp.id.equalsIgnoreCase(getItem(position).gs.opponent)){
+                    opponent = temp.user.name + " " + temp.user.surname;
+                }
+                if(temp.id.equalsIgnoreCase(getItem(position).gs.creator)){
+                    creator = temp.user.name + " " + temp.user.surname;
+                }
+            }
+
             String text;
             if(getItem(position).gs.creator.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
-                mainViewholder.title.setText("You challenged " + getItem(position).gs.opponent);
+                mainViewholder.title.setText("You challenged " + opponent);
 
                 if(getItem(position).gs.completed){
                     String txt = "";
                     mainViewholder.button.setVisibility(View.INVISIBLE);
                     if(getItem(position).gs.score1 > getItem(position).gs.score2){
                         txt = "YOU WON THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2 +
-                        "against " + getItem(position).gs.opponent;
+                        "against " + opponent;
                     }else{
                         txt = "YOU LOST THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2 +
-                                "against " + getItem(position).gs.opponent;
+                                "against " + opponent;
                     }
                     mainViewholder.title.setText(txt);
                 }
 
 
             }else if(getItem(position).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
-                mainViewholder.title.setText(getItem(position).gs.creator + "\n Challenged you");
+                mainViewholder.title.setText(creator + "\n Challenged you");
                 FirebaseFunctions.getInstance().challenged = true;
                 if(getItem(position).gs.completed){
                     String txt = "";
                     mainViewholder.button.setVisibility(View.INVISIBLE);
                     if(getItem(position).gs.score1 > getItem(position).gs.score2){
                         txt = "YOU LOST THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2+
-                                "against " + getItem(position).gs.creator;
+                                "against " + creator;
                     }else{
                         txt = "YOU WON THE CHALLENGE \n" + getItem(position).gs.score1 +" to" + " " + getItem(position).gs.score2+
-                                "against " + getItem(position).gs.creator;
+                                "against " + creator;
                     }
                     mainViewholder.title.setText(txt);
                 }
@@ -191,6 +220,7 @@ public class ChallengeFragment extends Fragment {
                         intent.putExtra("question", FirebaseFunctions.getInstance().quNum);
                         startActivity(intent);
                     }else{
+                        FirebaseFunctions.getInstance().memochal = true;
                         MemoData.getInstance().initialize();
                         Intent intent = new Intent(getActivity(), MemoGameActivity.class);
                         startActivity(intent);

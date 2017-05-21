@@ -213,7 +213,7 @@ public class FirebaseFunctions {
 
     public void getScores(final Runnable onLoaded) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = mDatabase.child("highscore");
+        Query query = mDatabase.child("highscore").orderByChild("score");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -233,6 +233,7 @@ public class FirebaseFunctions {
                             all_scores2.add(all_scores.get(i));
                         }
                         all_scores2 = new ArrayList<>(new LinkedHashSet<>(all_scores2));
+                        java.util.Collections.reverse(all_scores2);
                     }
 
                     onLoaded.run();

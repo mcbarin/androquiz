@@ -191,36 +191,44 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                             // Game ended, go to next level. If this is the last level, show game score.
                             View fragmentContainer = getView().findViewById(R.id.fragment_container);
 
-                            if (mLevel != 3){
-                                // Check the fragment container for tablet or phone.
-                                MemoData.getInstance().levelUp();
-                                // Prepare the fragment.
-                                MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
+                            if(FirebaseFunctions.getInstance().memochal){
+                                Intent intent = new Intent();
+                                intent = new Intent(getActivity(), DrawerActivity.class);
+                                startActivity(intent);
 
-                                if (isLarge){ // Tablet
-                                    Log.i("PLACE", "TABLET");
-                                    android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                    transaction.replace(R.id.fragment_container, fragment).commit();
-                                } else{ // Phone
-                                    Log.i("PLACE", "PHONE");
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                    transaction.replace(R.id.memo_fragment, fragment).commit();
-                                }
-                            } else{
-                                // Level 3. Game is successfully finished.
+                            }else {
 
-                                EndGameFragment fragment = EndGameFragment.newInstance("memo");
+                                if (mLevel != 3) {
+                                    // Check the fragment container for tablet or phone.
+                                    MemoData.getInstance().levelUp();
+                                    // Prepare the fragment.
+                                    MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
 
-                                if (fragmentContainer != null){ // Tablet
-                                    android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                    transaction.replace(R.id.fragment_container, fragment).commit();
-                                } else{ // Phone
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                    transaction.replace(R.id.memo_fragment, fragment).commit();
+                                    if (isLarge) { // Tablet
+                                        Log.i("PLACE", "TABLET");
+                                        android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                        transaction.replace(R.id.fragment_container, fragment).commit();
+                                    } else { // Phone
+                                        Log.i("PLACE", "PHONE");
+                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                        transaction.replace(R.id.memo_fragment, fragment).commit();
+                                    }
+                                } else {
+                                    // Level 3. Game is successfully finished.
+
+                                    EndGameFragment fragment = EndGameFragment.newInstance("memo");
+
+                                    if (fragmentContainer != null) { // Tablet
+                                        android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                        transaction.replace(R.id.fragment_container, fragment).commit();
+                                    } else { // Phone
+                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                        transaction.replace(R.id.memo_fragment, fragment).commit();
+                                    }
                                 }
                             }
                         }
@@ -414,7 +422,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 gsID.gs.completed = true;
                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
-                
+
             }else {
                 GameState gs = new GameState();
                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags

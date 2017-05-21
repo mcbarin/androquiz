@@ -242,9 +242,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     User temp = getItem(position).user;
                     String user_id = getItem(position).id;
 
-
                     // Memo Game başlat
-
                     MemoData.getInstance().initialize();
                     FirebaseFunctions.getInstance().memochal = true;
                     FirebaseFunctions.getInstance().cur_opponent = user_id;
