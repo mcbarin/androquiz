@@ -57,7 +57,6 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
     private View view;
     private LinearLayout heart_images;
     Resources res;
-    public boolean isLarge = false;
     private FirebaseStorage storage;
     private StorageReference storageReference;
     ArrayList<String> target_flagnames, flag_list;
@@ -189,13 +188,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
                                 gsID.gs.completed = true;
                                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
-                            } else {
+                            } else if (FirebaseFunctions.getInstance().memochal) {
                                 GameState gs = new GameState();
                                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
                                 gs.gameType = 1;
                                 gs.gameLevel = FirebaseFunctions.getInstance().level;
                                 gs.creator = FirebaseFunctions.getInstance().temp_user.id;
                                 gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
+                                System.out.println("opponent is :" + gs.opponent);
                                 gs.score1 = MemoData.getInstance().score.getScore();
                                 gs.flag_list = flag_list;
                                 gs.target_flagnames = target_flagnames;
@@ -215,21 +215,17 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
 
                                 if (mLevel != 3) {
                                     // Check the fragment container for tablet or phone.
-                                    MemoData.getInstance().levelUp();
                                     // Prepare the fragment.
-                                    MemoGameFragment fragment = MemoGameFragment.newInstance(mLevel + 1);
-
-                                    if (isLarge) { // Tablet
-                                        Log.i("PLACE", "TABLET");
-                                        android.support.v4.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                        transaction.replace(R.id.fragment_container, fragment).commit();
-                                    } else { // Phone
-                                        Log.i("PLACE", "PHONE");
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                        transaction.replace(R.id.memo_fragment, fragment).commit();
+                                    MemoData.getInstance().initialize();
+                                    FirebaseFunctions.getInstance().memochal = true;
+                                    FirebaseFunctions.getInstance().gamelevel++;
+                                    if(FirebaseFunctions.getInstance().gamelevel == 4){
+                                        FirebaseFunctions.getInstance().gamelevel = 1;
                                     }
+                                    Intent intent = new Intent(getActivity(), MemoGameActivity.class);
+                                    startActivity(intent);
+
+
                                 } else {
                                     // Level 3. Game is successfully finished.
                                     FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
@@ -464,7 +460,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
 
-            } else {
+            } else if (FirebaseFunctions.getInstance().memochal) {
                 GameState gs = new GameState();
                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
                 gs.gameType = 1;
@@ -474,6 +470,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener {
                 gs.score1 = MemoData.getInstance().score.getScore();
                 gs.flag_list = flag_list;
                 gs.target_flagnames = target_flagnames;
+                System.out.println("opponent is :" + gs.opponent);
 
                 FirebaseFunctions.getInstance().postGameState(gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));

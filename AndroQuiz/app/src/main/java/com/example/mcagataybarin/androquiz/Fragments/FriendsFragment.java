@@ -350,8 +350,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     ChallengeFragment frag2 = new ChallengeFragment();
                     for(int i = 0; i < FirebaseFunctions.getInstance().all_challenges2.size();i++){
                         System.out.println(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent + " " + FirebaseFunctions.getInstance().temp_user.id);
-                        if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
-                            frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));
+                        if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent != null) {
+                            if (FirebaseFunctions.getInstance().all_challenges2.get(i).gs.opponent.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)) {
+                                frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));
+                            }
                         }
                         if(FirebaseFunctions.getInstance().all_challenges2.get(i).gs.creator.equalsIgnoreCase(FirebaseFunctions.getInstance().temp_user.id)){
                             frag2.requests.add(FirebaseFunctions.getInstance().all_challenges2.get(i));

@@ -38,7 +38,6 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
     Question q;
     public int categoryNumber, questionNumber;
     private Activity mActivity;
-    public boolean isLarge;
     private int seconds = 10;
     private boolean running, wasRunning;
     private int level;

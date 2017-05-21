@@ -79,7 +79,6 @@ public class QuizActivity2 extends AppCompatActivity implements ListFragment.Wor
             if(((int) id) == 0) {
                 QuestionData.getInstance().initialize(); // initialize game.
                 details = new CategoryFragment();
-                details.isLarge = true;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 ft.replace(R.id.fragment_container, details);
@@ -89,7 +88,6 @@ public class QuizActivity2 extends AppCompatActivity implements ListFragment.Wor
             } else{
                 MemoData.getInstance().initialize();
                 MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
-                fragment.isLarge = true;
                 android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 getFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 transaction.replace(R.id.fragment_container, fragment);

@@ -32,7 +32,6 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     int[] statusColors = {Color.RED, Color.GREEN, Color.BLUE, Color.TRANSPARENT};
     int lastCategory, lastQuestion;
     View vieww;
-    public boolean isLarge;
     public int result;
     private Intent intent;
     private int questionNumber;
@@ -243,7 +242,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
                 }
 
                 updateInfo();
-
+                // KtZffN4ezpoYT
                 // if all questions are answered, show the end game message.
                 if(QuestionData.getInstance().getNumAnsweredQuestions() == 15){
                     TextView finishText = (TextView) vieww.findViewById(R.id.finishText);
