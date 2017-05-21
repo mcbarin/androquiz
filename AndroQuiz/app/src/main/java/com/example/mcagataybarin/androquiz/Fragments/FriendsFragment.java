@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.mcagataybarin.androquiz.ChooseActivity;
 import com.example.mcagataybarin.androquiz.FirebaseFunctions;
 import com.example.mcagataybarin.androquiz.LoadFragment;
 import com.example.mcagataybarin.androquiz.MemoData;
@@ -243,11 +244,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                     String user_id = getItem(position).id;
 
                     // Memo Game başlat
-                    MemoData.getInstance().initialize();
-                    FirebaseFunctions.getInstance().memochal = true;
                     FirebaseFunctions.getInstance().cur_opponent = user_id;
-                    Intent intent = new Intent(getActivity(), MemoGameActivity.class);
+                    Intent intent = new Intent(getActivity(), ChooseActivity.class);
                     startActivity(intent);
+
 
 
                 }

@@ -14,7 +14,7 @@ public class MemoGameActivity extends AppCompatActivity implements MemoGameFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
 
-        MemoGameFragment fragment = MemoGameFragment.newInstance(1); // Start from level 1;
+        MemoGameFragment fragment = MemoGameFragment.newInstance(FirebaseFunctions.getInstance().gamelevel); // Start from level 1;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.memo_fragment, fragment).commit();
         final Handler handler = new Handler();

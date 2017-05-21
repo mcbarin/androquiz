@@ -51,6 +51,7 @@ public class FirebaseFunctions {
     public ArrayList<HighScore> all_scores, all_scores2;
     public ArrayList<Question> temp_questions = new ArrayList<>();
     public boolean memochal = false;
+    public int gamelevel;
 
     public static FirebaseFunctions getInstance() {
         return ourInstance;

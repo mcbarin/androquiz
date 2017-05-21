@@ -57,6 +57,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     public boolean isLarge = false;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    ArrayList<String> target_flagnames, flag_list;
 
     // For handling the choosing flags.
     int lastOpenedFlagPosition;
@@ -96,9 +97,16 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+
         // First get the flag data from MemoData class.
-        ArrayList<String> target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
-        ArrayList<String> flag_list = MemoData.getInstance().getFlagList(mLevel);
+        if(!FirebaseFunctions.getInstance().challenged) {
+            target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
+            flag_list = MemoData.getInstance().getFlagList(mLevel);
+        }else{
+            target_flagnames = FirebaseFunctions.getInstance().curgs.gs.target_flagnames;
+            flag_list = FirebaseFunctions.getInstance().curgs.gs.flag_list;
+        }
+
 
         // Hear we add the target flags to the linear layout programmatically.
         LinearLayout target_flags = (LinearLayout) view.findViewById(R.id.target_flags_images);
@@ -184,6 +192,8 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                 gs.creator = FirebaseFunctions.getInstance().temp_user.id;
                                 gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
                                 gs.score1 = MemoData.getInstance().score.getScore();
+                                gs.flag_list = flag_list;
+                                gs.target_flagnames = target_flagnames;
                                 FirebaseFunctions.getInstance().postGameState(gs);
                                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
                             }
@@ -431,6 +441,9 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 gs.creator = FirebaseFunctions.getInstance().temp_user.id;
                 gs.opponent = FirebaseFunctions.getInstance().cur_opponent;
                 gs.score1 = MemoData.getInstance().score.getScore();
+                gs.flag_list = flag_list;
+                gs.target_flagnames = target_flagnames;
+
                 FirebaseFunctions.getInstance().postGameState(gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
 

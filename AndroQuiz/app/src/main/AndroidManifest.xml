@@ -10,11 +10,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <service
-            android:name=".MessageService">
+        <service android:name=".MessageService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -32,7 +30,11 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".QuizActivity2" />
-        <activity android:name=".DrawerActivity"></activity>
+        <activity android:name=".DrawerActivity" />
+        <activity
+            android:name=".ChooseActivity"
+            android:label="@string/title_activity_choose"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

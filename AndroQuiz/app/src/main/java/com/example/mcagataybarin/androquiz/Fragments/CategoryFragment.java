@@ -46,6 +46,11 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

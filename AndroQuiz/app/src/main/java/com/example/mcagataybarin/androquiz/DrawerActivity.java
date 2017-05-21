@@ -67,6 +67,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
     private String[] titles;
     private ListView drawerList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +154,7 @@ public class DrawerActivity extends AppCompatActivity implements MemoGameFragmen
                         ft3.replace(R.id.content_frame, fragment3[0]);
                         ft3.addToBackStack(null);
                         ft3.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        ft3.commit();
+                        ft3.commitAllowingStateLoss();
                         newFragment.dismiss();
                     }
                 });
