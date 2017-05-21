@@ -38,6 +38,17 @@
             android:layout_below="@+id/memo_score"
             android:layout_marginTop="10dp"/>
 
+        <TextView android:id="@+id/time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="73sp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp" />
+
         <LinearLayout
             android:id="@+id/heart_images"
             android:layout_width="wrap_content"
@@ -75,6 +86,8 @@
             android:numColumns="auto_fit"
             android:stretchMode="columnWidth"
             />
+
+
 
     </RelativeLayout>
 

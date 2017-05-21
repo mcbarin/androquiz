@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +49,7 @@ import java.util.ArrayList;
  * Use the {@link MemoGameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MemoGameFragment extends Fragment implements View.OnClickListener{
+public class MemoGameFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "mLevel";
     private int mLevel; // 1,2 or 3
     private GridView gridView;
@@ -61,6 +64,8 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
     // For handling the choosing flags.
     int lastOpenedFlagPosition;
+    private int seconds = 1;
+    private boolean running, wasRunning;
     String lastOpenedFlagName;
     boolean isAnyFlagOpen = false;
     int remainingTargetFlags;
@@ -99,10 +104,10 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
 
         // First get the flag data from MemoData class.
-        if(!FirebaseFunctions.getInstance().challenged) {
+        if (!FirebaseFunctions.getInstance().challenged) {
             target_flagnames = MemoData.getInstance().getTargetFlags(mLevel);
             flag_list = MemoData.getInstance().getFlagList(mLevel);
-        }else{
+        } else {
             target_flagnames = FirebaseFunctions.getInstance().curgs.gs.target_flagnames;
             flag_list = FirebaseFunctions.getInstance().curgs.gs.flag_list;
         }
@@ -111,11 +116,11 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         // Hear we add the target flags to the linear layout programmatically.
         LinearLayout target_flags = (LinearLayout) view.findViewById(R.id.target_flags_images);
 
-        for(int i=0; i<target_flagnames.size(); i++){
+        for (int i = 0; i < target_flagnames.size(); i++) {
             ImageView image = new ImageView(view.getContext());
             Glide.with(getContext()).using(new FirebaseImageLoader()).load(storageReference.child(target_flagnames.get(i))).into(image);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, LinearLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.setMargins(10,10,10,10);
+            layoutParams.setMargins(10, 10, 10, 10);
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             target_flags.addView(image, layoutParams);
         }
@@ -127,7 +132,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         // For setting up the life images programmatically <3 <3 <3
         heart_images = (LinearLayout) view.findViewById(R.id.heart_images);
         final int remaining_lives = MemoData.getInstance().lifePoint.getRemainingLife();
-        for(int i=0;i<remaining_lives;i++){
+        for (int i = 0; i < remaining_lives; i++) {
             ImageView heart = new ImageView(view.getContext());
             heart.setBackground(getResources().getDrawable(R.drawable.heart));
             heart_images.addView(heart);
@@ -142,7 +147,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         updateScore(view);
 
         // We handle all of the interactions of user with flags in this click listener.
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View local_view, final int position, long id) {
                 String item = (String) parent.getItemAtPosition(position);
@@ -151,14 +156,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                 final ImageView image = getImageViewAtIndex(position);
                 showFlag(image);
 
-                if(isAnyFlagOpen){
+                if (isAnyFlagOpen) {
                     // First check if same item is clicked or not.
                     if (lastOpenedFlagPosition == position)
                         return;
 
                     // Then check if it's same or not.
                     boolean isSame = lastOpenedFlagName.equals(item);
-                    if (isSame){
+                    if (isSame) {
                         // Increment Point.
                         Log.i("STATUS", "RIGHT");
                         MemoData.getInstance().score.incrementScore();
@@ -175,16 +180,16 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
                         // Check if game is ended with success or not.
                         remainingTargetFlags -= 1;
-                        if (remainingTargetFlags == 0){
+                        if (remainingTargetFlags == 0) {
 
                             FirebaseFunctions.gsID gsID;
-                            if(FirebaseFunctions.getInstance().challenged){
+                            if (FirebaseFunctions.getInstance().challenged) {
                                 gsID = FirebaseFunctions.getInstance().curgs;
                                 gsID.gs.score2 = MemoData.getInstance().score.getScore();
                                 gsID.gs.completed = true;
                                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
-                            }else {
+                            } else {
                                 GameState gs = new GameState();
                                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
                                 gs.gameType = 1;
@@ -201,12 +206,12 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                             // Game ended, go to next level. If this is the last level, show game score.
                             View fragmentContainer = getView().findViewById(R.id.fragment_container);
 
-                            if(FirebaseFunctions.getInstance().memochal){
+                            if (FirebaseFunctions.getInstance().memochal) {
                                 Intent intent = new Intent();
                                 intent = new Intent(getActivity(), DrawerActivity.class);
                                 startActivity(intent);
 
-                            }else {
+                            } else {
 
                                 if (mLevel != 3) {
                                     // Check the fragment container for tablet or phone.
@@ -228,21 +233,13 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                                 } else {
                                     // Level 3. Game is successfully finished.
 
-                                    EndGameFragment fragment = EndGameFragment.newInstance("memo");
-
-                                    if (fragmentContainer != null) { // Tablet
-                                        android.support.v4.app.FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                        transaction.replace(R.id.fragment_container, fragment).commit();
-                                    } else { // Phone
-                                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                        transaction.setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                                        transaction.replace(R.id.memo_fragment, fragment).commit();
-                                    }
+                                    Intent intent = new Intent();
+                                    intent = new Intent(getActivity(), DrawerActivity.class);
+                                    startActivity(intent);
                                 }
                             }
                         }
-                    }else {
+                    } else {
                         // User failed to match the flags.
                         Log.i("STATUS", "WRONG");
                         isAnyFlagOpen = false;
@@ -265,7 +262,7 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         }
                     }
 
-                }else { // If all flags are closed and this is the first one;
+                } else { // If all flags are closed and this is the first one;
                     lastOpenedFlagName = item;
                     lastOpenedFlagPosition = position;
                     isAnyFlagOpen = true;
@@ -276,11 +273,11 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d("DAN","DANDIRIRIRIDAN");
-                                if(!MemoData.getInstance().isFlagMatched(position)) {
+                                Log.d("DAN", "DANDIRIRIRIDAN");
+                                if (!MemoData.getInstance().isFlagMatched(position)) {
                                     if (isAnyFlagOpen)
                                         hideFlag(image);
-                                    if(isAnyFlagOpen && lastOpenedFlagPosition == position)
+                                    if (isAnyFlagOpen && lastOpenedFlagPosition == position)
                                         decrementLifePoint();
                                 }
                                 isAnyFlagOpen = false;
@@ -298,6 +295,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
 
         return view;
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        runTimer();
+
+    }
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -323,14 +328,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     }
 
     // Returns a Bitmap object from assets folder with given file name argument.
-    public Bitmap ImageViaAssets(String fileName){
+    public Bitmap ImageViaAssets(String fileName) {
 
         AssetManager assetmanager = getContext().getAssets();
         InputStream is = null;
-        try{
+        try {
 
             is = assetmanager.open(fileName);
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -358,17 +363,17 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     }
 
     // This function hides the flag picture.
-    public void hideFlag(ImageView image){
+    public void hideFlag(ImageView image) {
         final int newColor = res.getColor(R.color.flag_unvisible);
         image.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     // This function shows the hidden flag again.
-    public void showFlag(ImageView image){
+    public void showFlag(ImageView image) {
         image.setColorFilter(null);
     }
 
-    private ImageView getImageViewAtIndex(int index){
+    private ImageView getImageViewAtIndex(int index) {
         View image_view = gridView.getChildAt(index);
 
         if (image_view != null)
@@ -379,43 +384,69 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
     /*
     * This method shows the flags on start for 5 seconds, then hides it and game starts.
     * */
-    public void showFlagsOnStart(){
+    public void showFlagsOnStart() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 // First show all images.
-                for (int i=0; i< gridView.getChildCount(); i++){
+                for (int i = 0; i < gridView.getChildCount(); i++) {
                     View imageView = gridView.getChildAt(i);
-                    if (imageView != null){
+                    if (imageView != null) {
                         ImageView image = (ImageView) imageView.findViewById(R.id.grid_image);
                         hideFlag(image);
                     }
                 }
                 gridView.setEnabled(true);
+                running = true;
             }
         }, 11500);
 
     }
 
     // Updates the score in the fragment.
-    public void updateScore(View view){
+    public void updateScore(View view) {
         int current_score = MemoData.getInstance().score.getScore();
         TextView score = (TextView) view.findViewById(R.id.memo_score);
-        score.setText("Score: " + ""+ current_score);
+        score.setText("Score: " + "" + current_score);
     }
 
     // This method takes a flag name and hides it from target flags.
-    public void removeFlagFromTargetList(String flagName){
+    public void removeFlagFromTargetList(String flagName) {
         LinearLayout targetFlags = (LinearLayout) view.findViewById(R.id.target_flags_images);
-        ArrayList<String> targetFlagName = MemoData.getInstance().target_flags.get(mLevel-1);
-        for (int i=0; i<targetFlagName.size(); i++){
-            if (targetFlagName.get(i).equals(flagName)){
+        ArrayList<String> targetFlagName = MemoData.getInstance().target_flags.get(mLevel - 1);
+        for (int i = 0; i < targetFlagName.size(); i++) {
+            if (targetFlagName.get(i).equals(flagName)) {
                 View targetView = targetFlags.getChildAt(i);
                 targetView.setVisibility(View.INVISIBLE);
                 break;
             }
         }
     }
+
+
+    private void runTimer() {
+        final TextView timeView = (TextView) view.findViewById(R.id.time_view);
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int hours = seconds / 3600;
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+                String time = String.format("%02d", secs);
+                timeView.setText(time);
+                if (secs < 4) {
+                    timeView.setTextColor(Color.RED);
+                }
+                if (running) {
+                    seconds++;
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+    }
+
 
     // Remove one life point of user and also hides one of the heart images from fragment.
     // Also it checks for losing conditions and show the score fragment.
@@ -426,14 +457,14 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
         if (isFailed) {
 
             FirebaseFunctions.gsID gsID;
-            if(FirebaseFunctions.getInstance().challenged){
+            if (FirebaseFunctions.getInstance().challenged) {
                 gsID = FirebaseFunctions.getInstance().curgs;
                 gsID.gs.score2 = MemoData.getInstance().score.getScore();
                 gsID.gs.completed = true;
                 FirebaseFunctions.getInstance().postGameStateDirect(gsID.id, gsID.gs);
                 FirebaseFunctions.getInstance().postHighScore(new HighScore(FirebaseFunctions.getInstance().temp_user.user.username, MemoData.getInstance().score.getScore()));
 
-            }else {
+            } else {
                 GameState gs = new GameState();
                 // int gameType, int gameLevel, String creatorUsername, String opponentUsername, int score1, int score2, int time1, int time2, int flags
                 gs.gameType = 1;
@@ -452,28 +483,10 @@ public class MemoGameFragment extends Fragment implements View.OnClickListener{
             gridView.setEnabled(false); // Disable the gridView.
 
 
-            if(FirebaseFunctions.getInstance().memochal){
-                Intent intent = new Intent();
-                intent = new Intent(getActivity(), DrawerActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent();
+            intent = new Intent(getActivity(), DrawerActivity.class);
+            startActivity(intent);
 
-            }else {
-                // Show score page.
-                View fragmentContainer = getActivity().findViewById(R.id.fragment_container);
-                EndGameFragment fragment = EndGameFragment.newInstance("memo");
-
-                if (fragmentContainer != null) { //  Tablet
-                    Log.i("LIFE", "TABLET");
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    transaction.replace(R.id.fragment_container, fragment).commit();
-                } else { // Phone
-                    Log.i("LIFE", "PHONE");
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    transaction.replace(R.id.memo_fragment, fragment).commit();
-                }
-            }
 
         } else {
             heart_images.removeViewAt(0); // Delete heart.
